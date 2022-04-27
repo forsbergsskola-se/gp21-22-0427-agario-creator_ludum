@@ -17,9 +17,14 @@ public class RequestServerTime : MonoBehaviour{
     
     
 
-    public void SendssRequest(){
+    public void Connect(){
         SendRequest();
     }
+    public void Disconnect(){
+        
+        DisconnectAsync();
+    }
+    
 
     public async Task SendRequest(){
         
@@ -27,10 +32,20 @@ public class RequestServerTime : MonoBehaviour{
         await tcpclient.ConnectAsync(serverEndpoint.Address, serverEndpoint.Port);
         Debug.Log("Connection accepted.");
 
-        byte[] buffer = new byte[100];
-        tcpclient.GetStream().Read(buffer,0, 100);
-        messageSenderEventSo.unityEventSo.Invoke(Encoding.ASCII.GetString(buffer));
-        Debug.Log(Encoding.ASCII.GetString(buffer));
+        var readFromStreamWhileConnected = new Task(() => {
+            while (tcpclient.Connected){
+                byte[] buffer = new byte[100];
+                tcpclient.GetStream().Read(buffer, 0, 100);
+                messageSenderEventSo.unityEventSo.Invoke(Encoding.ASCII.GetString(buffer));
+                Debug.Log(Encoding.ASCII.GetString(buffer));
+            }
+        });
+        readFromStreamWhileConnected.Start();
+
+
+    }
+
+    public async Task DisconnectAsync(){
         tcpclient.GetStream().Close();
         Debug.Log("Stream Closed");
         tcpclient.Close();

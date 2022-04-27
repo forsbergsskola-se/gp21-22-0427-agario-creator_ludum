@@ -18,21 +18,37 @@ public class Program{
         TcpListener tcpListener = new TcpListener(endpoint);
         
         while (true){
+            string currentDateTime = DateTime.Now.ToString();
             tcpListener.Start();
             Console.WriteLine("Awaiting for connection");
             var tcpClient = await tcpListener.AcceptTcpClientAsync();
             Console.WriteLine("Connection accepted");
+            var executeAllTasksTask = new Task(() => {
+                var connectedClient = tcpClient;
+                while (connectedClient.Connected){
+                    Console.WriteLine("Connection stable");
+                    var encodedMessage = Encoding.ASCII.GetBytes(currentDateTime);
+                    tcpClient.GetStream().Write(encodedMessage);
+                }
+
+                Console.WriteLine("Connection Terminated");
+                tcpClient.GetStream().Close();
+                tcpClient.Close();
+            });
+            executeAllTasksTask.Start();
             
-            string currentDateTime = DateTime.Now.ToString();
-            string message = $"Connection Successful! Current time is : {currentDateTime}";
-            var encodedMessage = Encoding.ASCII.GetBytes(currentDateTime);
-            
-            
-            tcpClient.GetStream().Write(encodedMessage);
+            // string currentDateTime = DateTime.Now.ToString();
+            // string message = $"Connection Successful! Current time is : {currentDateTime}";
+            // var encodedMessage = Encoding.ASCII.GetBytes(currentDateTime);
+            //
+            //
+            //tcpClient.GetStream().Write(encodedMessage);
             tcpClient.GetStream().Close();
             tcpClient.Close();
         }
     }
+    
+    
     
     
 }
