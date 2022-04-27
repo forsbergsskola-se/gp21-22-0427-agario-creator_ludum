@@ -3,35 +3,39 @@ using System.Net.Sockets;
 using System.Text;
 
 public class Program{
-    
+    static string message = "";
     public static async Task Main(){
-        string message = "";
-        var udpClient = new UdpClient("127.0.0.1",10002);
-        var remoteEP = new IPEndPoint(IPAddress.Any, 10003); 
+        
+        var serverEndpoint = new IPEndPoint(IPAddress.Loopback, 10002);
+        var server = new UdpClient(serverEndpoint);
 
         while (true){
-            Console.WriteLine("Waiting for connection...");
-            var udpReceivedData =  udpClient.Receive(ref remoteEP);
-            Console.WriteLine("Connection accepted.");
-            var uudpReceivedDataAsString = udpReceivedData.ToString();
+            IPEndPoint remoteEP = default;
+            Console.WriteLine("Waiting for packet...");
+            var udpReceivedData =  server.Receive(ref remoteEP);
+            Console.WriteLine("packet received.");
+            var succsessMessage =  server.SendAsync(Encoding.ASCII.GetBytes("Successful Transmission!" + "\n"),remoteEP);
             
+            var udpReceivedDataAsString = Encoding.ASCII.GetString(udpReceivedData).Trim();
             if (udpReceivedData == null){
                 throw new NullReferenceException();
             }
-
-            if (!IsWord(uudpReceivedDataAsString)){
+            
+            if (!IsWord(udpReceivedDataAsString)){
                 throw new InvalidDataException();
             }
-
-            message +=  uudpReceivedDataAsString + " ";
-
+            
+            message += " " + udpReceivedDataAsString;
+            
+            Console.WriteLine(message);
             Console.WriteLine("Sending Data...");
-            await udpClient.SendAsync(Encoding.ASCII.GetBytes(message),remoteEP);
+            await succsessMessage;
+            await server.SendAsync(Encoding.ASCII.GetBytes(message+"\n"),remoteEP);
             Console.WriteLine("Data Sent.");
             Console.WriteLine("Closing Client...");
-            udpClient.Close();
             Console.WriteLine("Client Closed.");
         }
+        server.Close();
         
         
     }
