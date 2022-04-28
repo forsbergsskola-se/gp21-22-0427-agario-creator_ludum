@@ -10,31 +10,29 @@ public class RequestServerTime : MonoBehaviour{
 
     [SerializeField] UnityEventSO messageSenderEventSo;
     
-    static IPEndPoint serverEndpoint = new IPEndPoint(IPAddress.Loopback, 10000);
-    static IPEndPoint clientEndpoint = new IPEndPoint(IPAddress.Loopback, 10001);
-    static TcpClient tcpclient = new TcpClient(clientEndpoint);
-    
-    
-    
-
-    public void SendssRequest(){
-        SendRequest();
+    public void SendsRequest(){
+        SendRequestAsync();
     }
 
-    public async Task SendRequest(){
+    public async Task SendRequestAsync(){
         
+        IPEndPoint serverEndpoint = new IPEndPoint(IPAddress.Loopback, 10000);
+        IPEndPoint clientEndpoint = new IPEndPoint(IPAddress.Loopback, 10001);
+        TcpClient tcpClient = new TcpClient(clientEndpoint);
+                    
         Debug.Log("Attempting to Connect...");
-        await tcpclient.ConnectAsync(serverEndpoint.Address, serverEndpoint.Port);
+        await tcpClient.ConnectAsync(serverEndpoint.Address, serverEndpoint.Port);
         Debug.Log("Connection accepted.");
-
+            
         byte[] buffer = new byte[100];
-        tcpclient.GetStream().Read(buffer,0, 100);
+        tcpClient.GetStream().Read(buffer,0, 100);
         messageSenderEventSo.unityEventSo.Invoke(Encoding.ASCII.GetString(buffer));
         Debug.Log(Encoding.ASCII.GetString(buffer));
-        tcpclient.GetStream().Close();
+        tcpClient.GetStream().Close();
         Debug.Log("Stream Closed");
-        tcpclient.Close();
+        tcpClient.Close();
         Debug.Log("Client closed");
+
     }
     
 }

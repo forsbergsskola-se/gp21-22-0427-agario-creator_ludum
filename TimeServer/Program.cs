@@ -14,23 +14,21 @@ public class Program{
         );
         
         TcpListener tcpListener = new TcpListener(endpoint);
-        
+         tcpListener.Start();
         while (true){
-            tcpListener.Start();
+           
             Console.WriteLine("Awaiting for connection");
             var tcpClient = await tcpListener.AcceptTcpClientAsync();
             Console.WriteLine("Connection accepted");
             
             string currentDateTime = DateTime.Now.ToString();
-            string message = $"Connection Successful! Current time is : {currentDateTime}";
             var encodedMessage = Encoding.ASCII.GetBytes(currentDateTime);
             
-            
             tcpClient.GetStream().Write(encodedMessage);
+            
             tcpClient.GetStream().Close();
             tcpClient.Close();
         }
+        tcpListener.Stop();
     }
-    
-    
 }
