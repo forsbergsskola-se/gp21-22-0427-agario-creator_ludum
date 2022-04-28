@@ -19,7 +19,7 @@ public class AgarioHostClient : MonoBehaviour
                 //Current Name [on connection] (TCP) {P1}
                 //Current Score [when changed] (TCP) {P2}                       <------Property with event
                 //Current Size [when changed] (TCP) {P2}                        <------Property with event
-                //Orb[ID] Removed [when happens] (TCP) {P?}
+                //Orb[ID] Removed [when happens] (TCP) {P?}                     //Possible Cheating can happen here
                 
             //Server Client:
                 //To all Players:
