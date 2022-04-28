@@ -9,14 +9,26 @@ using UnityEngine.UI;
 public class UIColorSetter : MonoBehaviour{
     [SerializeField] [CanBeNull] UIColor imageColor;
     [SerializeField] [CanBeNull] UIColor textColor;
+    [SerializeField] bool setSpriteColor;
     [SerializeField] bool setImageColor;
     [SerializeField] bool setTextColor;
     [Tooltip("Press to instantly update Color")][SerializeField] bool updateColor;
     Image image;
+    SpriteRenderer spriteRenderer;
     TextMeshProUGUI textMeshProUGUI;
 
     void OnValidate(){
         if(updateColor){
+            if (setSpriteColor){
+                if (imageColor == null){
+                    Debug.Log($"No {imageColor} set");
+                }
+                else{
+                    spriteRenderer = GetComponent<SpriteRenderer>();
+                    spriteRenderer.color = imageColor.color;
+                }
+            }
+            
             if (setImageColor){
                 if (imageColor == null){
                     Debug.Log($"No {imageColor} set");
