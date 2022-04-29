@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 249421048752857334}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 198.27281, y: 202.24448, z: -2.3186173}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -44,6 +44,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7f9af4e7a49800489b48e2f13674472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  oldScene: {fileID: 102900000, guid: 5e0a9288d1ccb32428bb39ded778029a, type: 3}
+  menuScene: {fileID: 102900000, guid: 5e0a9288d1ccb32428bb39ded778029a, type: 3}
   loadingScene: {fileID: 102900000, guid: ba53ef48a40d947429a8026e96b9cfd0, type: 3}
-  newScene: {fileID: 102900000, guid: f07841620522a8443b2065d67f6e511b, type: 3}
+  gameScene: {fileID: 102900000, guid: f07841620522a8443b2065d67f6e511b, type: 3}

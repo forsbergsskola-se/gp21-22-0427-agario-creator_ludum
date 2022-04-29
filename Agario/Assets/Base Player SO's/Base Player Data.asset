@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc67c4f32a6b4084e9a84249cb820c6e, type: 3}
   m_Name: Base Player Data
   m_EditorClassIdentifier: 
-  color: {r: 0.13128638, g: 1, b: 0, a: 0}
-  movementSpeed: 1
+  baseMovementSpeed: 20
+  maxMovementSpeed: 30
+  minMovementSpeed: 5
   startSize: 3

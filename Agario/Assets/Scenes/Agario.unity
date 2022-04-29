@@ -134,6 +134,8 @@ GameObject:
   - component: {fileID: 98393449}
   - component: {fileID: 98393448}
   - component: {fileID: 98393450}
+  - component: {fileID: 98393451}
+  - component: {fileID: 98393452}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -225,6 +227,41 @@ MonoBehaviour:
   color: {r: 0, g: 0, b: 0, a: 0}
   id: 0
   name: 
+--- !u!114 &98393451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 98393447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 637b706c3f4c0024187017e27dd6ca6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerSo: {fileID: 11400000, guid: 22b21783faf79ec44b9a0aef50547fa1, type: 2}
+  map: {fileID: 1627366240}
+--- !u!50 &98393452
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 98393447}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &745265395
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,6 +21,7 @@ public class SceneChanger : MonoBehaviour{
     }
     public void LoadLoadingScreen(){
         SceneManager.LoadScene(loadingScene.name);
+        //SceneManager.MergeScenes( SceneManager.GetSceneByName(loadingScene.name), SceneManager.GetSceneByBuildIndex(2));
     }
 
     public void LoadGameScene(){

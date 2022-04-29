@@ -51,35 +51,52 @@ public class AgarioHostClient : MonoBehaviour
 
 
 
-                
+    public int maxClients = 10;
     public Dictionary<int, TcpClient> ClientDictionary = new Dictionary<int, TcpClient>();
-    public Dictionary<int, Player> PlayerDictionary = new Dictionary<int, Player>();
-   [Tooltip("Changing the amount of activeClients increases the max possible clients")] public int[] ActiveClients = new int[]{};
+    [Tooltip("Changing the amount of activeClients increases the max possible clients")] public int[] ActiveClients = new int[]{};
 
    TcpListener hostListener;
    bool waitingForNewClient = false;
 
-    void Start(){
+   void Awake(){
+       DontDestroyOnLoad(this);
+   }
+
+   void Start(){
         HostServer();
     }
 
-    async Task HostServer(){
-        IPEndPoint hostEndPoint = new IPEndPoint(IPAddress.Loopback, 20000);
+   async Task HostServer(){
+        IPEndPoint hostEndPoint = new IPEndPoint(IPAddress.Any, 20000);
         hostListener = new TcpListener(hostEndPoint);
         hostListener.Start(); // Server Starts here
+        Debug.Log("Server Started " + $"(Port: {hostEndPoint.Port})");
+
+        //Begins to listen for new client, and when found creates a new thread to deal with it.
+        hostListener.BeginAcceptTcpClient(TcpClientAcceptCallback, hostListener); 
         
-        while (true){
+        
+        
+        //while (true){
+            
+       
             if (!waitingForNewClient){
                 waitingForNewClient = true;
                 await NewClientConnection(); //Creates new thread so doesnt stop main thread
+
             }
             
-        }
+       // }
     }
 
-    async Task NewClientConnection(){
+   void TcpClientAcceptCallback(IAsyncResult callback){ //Becomes separate thread when beginAcceptTcpClient gets called
+       var tcpClient = hostListener.EndAcceptTcpClient(callback);
+       hostListener.BeginAcceptTcpClient(new AsyncCallback(TcpClientAcceptCallback), null);
+   }
+
+   async Task NewClientConnection(){
         var tcpClient = await AcceptNewTcpClientAsync();
-       // var player = CreateNewPlayer();
+        // var player = CreateNewPlayer();
        // AddClientAndPlayerToDictionary(tcpClient,player);
         waitingForNewClient = false;
 
@@ -92,15 +109,15 @@ public class AgarioHostClient : MonoBehaviour
         Debug.Log(newPlayerData);
     }
 
-    void AddClientAndPlayerToDictionary(TcpClient tcpClient, Player player){
-        for (int i = 0; i < ActiveClients.Length; i++){
-            if (ActiveClients[i] == default){
-                ActiveClients[i] = i;
-                PlayerDictionary.Add(ActiveClients[i],player);
-                ClientDictionary.Add(ActiveClients[i], tcpClient);
-            }
-        }
-    }
+    // void AddClientAndPlayerToDictionary(TcpClient tcpClient, Player player){
+    //     for (int i = 0; i < ActiveClients.Length; i++){
+    //         if (ActiveClients[i] == default){
+    //             ActiveClients[i] = i;
+    //             PlayerDictionary.Add(ActiveClients[i],player);
+    //             ClientDictionary.Add(ActiveClients[i], tcpClient);
+    //         }
+    //     }
+    // }
 
     async Task<byte[]> ReadNewPlayerData(TcpClient tcpClient){ 
         // IPEndPoint remoteEP = default;

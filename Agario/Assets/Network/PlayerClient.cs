@@ -11,6 +11,8 @@ public class PlayerClient : MonoBehaviour
     [SerializeField] DataUnityEventSo newPlayerDataReadyToSendSo;
     byte[][] dataToSend;
 
+    public int id;
+
     void Awake(){
         DontDestroyOnLoad(this);
     }
@@ -19,8 +21,8 @@ public class PlayerClient : MonoBehaviour
         newPlayerDataReadyToSendSo.dataUnityEventSo.AddListener(StoreNewPlayerCreatedData);
     }
 
-    public void Connect(){
-        ConnectAsync();
+    public async void Connect(){
+       await ConnectAsync();
     }
 
     public async Task ConnectAsync(){
