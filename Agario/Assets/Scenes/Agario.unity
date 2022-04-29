@@ -222,6 +222,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSo: {fileID: 11400000, guid: 22b21783faf79ec44b9a0aef50547fa1, type: 2}
   playerCreatedEventSo: {fileID: 11400000, guid: d6d82c224d07cc04d8c4d3f2b1245ea2, type: 2}
+  color: {r: 0, g: 0, b: 0, a: 0}
+  id: 0
+  name: 
 --- !u!1 &745265395
 GameObject:
   m_ObjectHideFlags: 0
@@ -782,7 +785,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 1.8848593, y: 1}
+    m_SensorSize: {x: 1.8866214, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

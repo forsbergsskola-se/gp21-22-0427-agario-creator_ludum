@@ -1,25 +1,46 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class PlayerClient : MonoBehaviour
 {
-    //Things that's stored on the player client
-    //Base Board to instantiate it
-    //Player
-    //
+    [SerializeField] DataUnityEventSo newPlayerDataReadyToSendSo;
+    byte[][] dataToSend;
+
+    void Awake(){
+        DontDestroyOnLoad(this);
+    }
+
     void Start(){
+        newPlayerDataReadyToSendSo.dataUnityEventSo.AddListener(StoreNewPlayerCreatedData);
+    }
+
+    public void Connect(){
+        ConnectAsync();
+    }
+
+    public async Task ConnectAsync(){
+        IPEndPoint hostEndpoint = new IPEndPoint(IPAddress.Loopback, 20000);
+        IPEndPoint clientEndpoint = new IPEndPoint(IPAddress.Loopback, 20001);
+        TcpClient tcpClient = new TcpClient(clientEndpoint);
+
+        Debug.Log("Attempting to Connect...");
+        await tcpClient.ConnectAsync(hostEndpoint.Address, hostEndpoint.Port);
+        Debug.Log("Connection established");
+        
+        
         
     }
 
-
-    void Connect(){
+    public void Disconnect(){
         
     }
-
-    void Disconnect(){
-        
+    void StoreNewPlayerCreatedData(byte[][] newData){
+        dataToSend = newData;
     }
 
 }

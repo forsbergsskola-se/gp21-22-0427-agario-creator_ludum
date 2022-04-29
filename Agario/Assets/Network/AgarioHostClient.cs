@@ -15,7 +15,7 @@ public class AgarioHostClient : MonoBehaviour
         
         //Who provides what:
             //Player Client:
-                //Current Position [when changed] (UDP) {P1},{P∞}               <------Property with event
+                //Current Position [when changed/on connection] (UDP) {P1},{P∞}               <------Property with event
                 //Current Name [on connection] (TCP) {P1}
                 //Current Score [when changed] (TCP) {P2}                       <------Property with event
                 //Current Size [when changed] (TCP) {P2}                        <------Property with event
@@ -51,26 +51,67 @@ public class AgarioHostClient : MonoBehaviour
 
 
 
+                
+    public Dictionary<int, TcpClient> ClientDictionary = new Dictionary<int, TcpClient>();
+    public Dictionary<int, Player> PlayerDictionary = new Dictionary<int, Player>();
+   [Tooltip("Changing the amount of activeClients increases the max possible clients")] public int[] ActiveClients = new int[]{};
 
+   TcpListener hostListener;
+   bool waitingForNewClient = false;
 
-            void Start(){
-        HostServer().Start();
+    void Start(){
+        HostServer();
     }
 
-    async Task HostServer(){
+    void HostServer(){
         IPEndPoint hostEndPoint = new IPEndPoint(IPAddress.Loopback, 20000);
-        TcpListener hostListener = new TcpListener(hostEndPoint);
+        hostListener = new TcpListener(hostEndPoint);
         hostListener.Start(); // Server Starts here
         
         while (true){
-            var newClientTask = await hostListener.AcceptTcpClientAsync(); // Waits for New Client
-            new Task(() => ClientConnection(hostListener,newClientTask).Start()).Start(); // Creates and starts a new task which will handle the new client
+            if (!waitingForNewClient){
+                waitingForNewClient = true;
+                NewClientConnection().Start(); //Creates new thread so doesnt stop main thread
+            }
+            
         }
     }
-    async Task ClientConnection(TcpListener hostListener,TcpClient tcpClient){ 
-        // IPEndPoint remoteEP = default;
 
+    async Task NewClientConnection(){
+        var tcpClient = await AcceptNewTcpClientAsync();
+       // var player = CreateNewPlayer();
+       // AddClientAndPlayerToDictionary(tcpClient,player);
+        waitingForNewClient = false;
+
+        
+        
+        var readNewPlayerDataTask = ReadNewPlayerData(tcpClient);
+        readNewPlayerDataTask.Start();
+        
+        var newPlayerData = await readNewPlayerDataTask;
+        Debug.Log(newPlayerData);
+    }
+
+    void AddClientAndPlayerToDictionary(TcpClient tcpClient, Player player){
+        for (int i = 0; i < ActiveClients.Length; i++){
+            if (ActiveClients[i] == default){
+                ActiveClients[i] = i;
+                PlayerDictionary.Add(ActiveClients[i],player);
+                ClientDictionary.Add(ActiveClients[i], tcpClient);
+            }
+        }
+    }
+
+    async Task<byte[]> ReadNewPlayerData(TcpClient tcpClient){ 
+        // IPEndPoint remoteEP = default;
+    
         byte[] buffer = new byte[100];
-        tcpClient.GetStream().Read(buffer, 0, buffer.Length);
+        await tcpClient.GetStream().ReadAsync(buffer, 0, buffer.Length);
+        return buffer;
+    }
+
+    async Task<TcpClient> AcceptNewTcpClientAsync(){
+        var newTcpClient = await hostListener.AcceptTcpClientAsync();
+        return newTcpClient;
     }
 }

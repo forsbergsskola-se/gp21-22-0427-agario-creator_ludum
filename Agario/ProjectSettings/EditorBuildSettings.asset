@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 8c9cfa26abfee488c85f1582747f6a02
+    path: Assets/Scenes/AgarioMenu.unity
+    guid: 5e0a9288d1ccb32428bb39ded778029a
+  - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: ba53ef48a40d947429a8026e96b9cfd0
+  - enabled: 1
+    path: Assets/Scenes/Agario.unity
+    guid: f07841620522a8443b2065d67f6e511b
   m_configObjects: {}
