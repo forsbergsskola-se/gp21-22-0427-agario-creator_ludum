@@ -63,7 +63,7 @@ public class AgarioHostClient : MonoBehaviour
         HostServer();
     }
 
-    void HostServer(){
+    async Task HostServer(){
         IPEndPoint hostEndPoint = new IPEndPoint(IPAddress.Loopback, 20000);
         hostListener = new TcpListener(hostEndPoint);
         hostListener.Start(); // Server Starts here
@@ -71,7 +71,7 @@ public class AgarioHostClient : MonoBehaviour
         while (true){
             if (!waitingForNewClient){
                 waitingForNewClient = true;
-                NewClientConnection().Start(); //Creates new thread so doesnt stop main thread
+                await NewClientConnection(); //Creates new thread so doesnt stop main thread
             }
             
         }
