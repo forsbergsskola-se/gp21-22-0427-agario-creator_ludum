@@ -6,13 +6,13 @@ using System.Text;
 using UnityEditor.MemoryProfiler;
 using UnityEngine;
 
-public class Client : MonoBehaviour{
+public class ClientTest : MonoBehaviour{
     public static int bufferSize = 4096;
     public int id;
     public PlayerTCP playerTcp;
     
 
-    public Client(int _id){
+    public ClientTest(int _id){
         id = _id;
         playerTcp = new PlayerTCP(id);
     }
