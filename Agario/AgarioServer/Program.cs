@@ -10,6 +10,8 @@ public class Server{
     static TcpListener hostListener;
     static int maxClients = 10;
     static Dictionary<int, ClientSlot> connectedClientDictionary;
+
+    public static Action<int> clearDataEvent;
     
     
     public static void Main(){
@@ -37,7 +39,7 @@ public class Server{
 
     static void CreateEmptyClientSlots(){
         for (int i = 1; i <= maxClients; i++){
-            connectedClientDictionary.Add(i, new ClientSlot(i, null));
+            connectedClientDictionary.Add(i, new ClientSlot(0, null));
         }
     }
 
@@ -48,14 +50,14 @@ public class Server{
             
             Console.WriteLine($"New Client accepted.");
             var activatedClientSlot = TryAssignClientToDictionary(tcpClient);
-            
-            ReadFromStreamTask(activatedClientSlot);
+
+            await ReadFromStreamTask(activatedClientSlot);
         }
     }
 
     static ClientSlot TryAssignClientToDictionary(TcpClient tcpClient){
         for (int i = 1; i <= connectedClientDictionary.Count; i++){
-            if (connectedClientDictionary[i].tcpClient == default){
+            if (connectedClientDictionary[i].id == 0){
                 connectedClientDictionary[i] = new ClientSlot(i, tcpClient);
                 Console.WriteLine($"New Client: ({tcpClient}, Id: {i}).");
                 return connectedClientDictionary[i];
@@ -73,7 +75,8 @@ public class Server{
         var id = clientSlot.id;
         var stream = clientSlot.tcpClient.GetStream();
 
-        while (true){
+        while (tcpClient.Connected){
+            
             Console.WriteLine($"Listening for data stream from {tcpClient} ({id}).");
             var receivedByteSize = await stream.ReadAsync(buffer,0,bufferSize);
             Console.WriteLine($"Received data stream from {tcpClient} ({id}).");
@@ -81,7 +84,11 @@ public class Server{
             if (receivedByteSize <= 0){
                 //No data received
                 Console.WriteLine($"Data stream from {tcpClient} ({id}) was empty, discarding.");
-                return;
+               // connectedClientDictionary[id].tcpClient.Dispose();
+               clientSlot.ClearAllData(id);
+               stream.Socket.Close();
+               clearDataEvent.Invoke(id);
+                continue;
             }
             
             byte[] receivedDataBuffer = new byte[receivedByteSize];
@@ -90,22 +97,46 @@ public class Server{
             Array.Copy(buffer, receivedDataBuffer, receivedByteSize);
             Console.WriteLine(Encoding.ASCII.GetString(buffer));
         }
+
+        Console.WriteLine($"Closing Stream ({id})...");
+        stream.Close();
+        Console.WriteLine($"Stream ({id}) Closed.");
+        await stream.DisposeAsync();
+        
+        Console.WriteLine($"Closing Client ({id})...");
+        clientSlot.tcpClient.Close();
+        Console.WriteLine($"Client ({id}) Closed.");
+        clientSlot.tcpClient.Dispose();
     }
 }
 
 internal class ClientSlot{
     public int id;
     public TcpClient tcpClient;
-    public NetworkStream stream;
     public int bufferSize = 4000;
     public byte[] buffer;//4kb
+    
     public ClientSlot(int _id, TcpClient _tcpClient){
         id = _id;
         tcpClient = _tcpClient;
-        
+
+
+        Server.clearDataEvent +=  ClearAllData;
         buffer = new byte[bufferSize];
     }
 
-    
+    public void ClearAllData(int _id){
+        if (id != _id){
+            return;
+        }
+
+        Console.WriteLine($"Clearing data for client ({id})");
+        id = 0;
+        tcpClient.GetStream().Close();
+        tcpClient.Close();
+        tcpClient.Dispose();
+        GC.Collect();
+        tcpClient = default;
+    }
     
 }
