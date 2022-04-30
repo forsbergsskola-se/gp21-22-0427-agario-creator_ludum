@@ -69,14 +69,17 @@ internal class ClientSlot{
         tcpClient = _tcpClient;
         
         buffer = new byte[bufferSize];
+        ReadFromStream();
     }
 
-    void ReadFromStream(){
+    async Task ReadFromStream(){
         stream = tcpClient.GetStream();
-        var receivedByteSize = stream.ReadAsync(buffer,0,bufferSize).Result;
-        
+        Console.WriteLine($"Listening for data stream from {tcpClient} ({id}).");
+        var receivedByteSize = await stream.ReadAsync(buffer,0,bufferSize);
+        Console.WriteLine($"Received data stream from {tcpClient} ({id}).");
         if (receivedByteSize <= 0){
             //No data received
+            Console.WriteLine($"Data stream from {tcpClient} ({id}) was empty, discarding.");
             return;
         }
         byte[] receivedDataBuffer = new byte[receivedByteSize];
