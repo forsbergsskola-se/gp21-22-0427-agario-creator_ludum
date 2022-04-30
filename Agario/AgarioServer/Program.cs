@@ -5,7 +5,6 @@ public class Server{
     static readonly int port = 9000;
     static readonly IPEndPoint hostEndpoint = new IPEndPoint(IPAddress.Loopback, port);
     static TcpListener hostListener;
-    static NetworkStream stream;
     static int maxClients = 10;
     static Dictionary<int, ClientSlot> connectedClientDictionary;
     
@@ -22,9 +21,8 @@ public class Server{
         Console.WriteLine($"Server Started (Port: {port})");
         
         //Begins the connection process, but creates a new thread which deals with finishing it.
-        Console.WriteLine("Waiting for connection...");
-        hostListener.BeginAcceptTcpClient(BeginAcceptTcpClientCallback, hostListener);
-        
+        Console.WriteLine("Starting task to listen for new tcp Clients");
+        ListenForTcpClients();
         Console.Read();
         
         
@@ -36,19 +34,15 @@ public class Server{
         }
     }
 
-    static void BeginAcceptTcpClientCallback(IAsyncResult result){
-        //finishes the connection and assigns client to variable
-        var tcpClient = hostListener.EndAcceptTcpClient(result);
-        Console.WriteLine("Connection established.");
-        TryAssignClientToDictionary(tcpClient);
-        
-        //Ensure we keep listening for new clients
-        Console.WriteLine("Waiting for connection...");
-      hostListener.BeginAcceptTcpClient(BeginAcceptTcpClientCallback, hostListener);
-
+    static async Task ListenForTcpClients(){
+        while (true){ 
+            Console.WriteLine("Waiting for connection...");
+            var tcpClient = await hostListener.AcceptTcpClientAsync();
+            TryAssignClientToDictionary(tcpClient);
+        }
     }
 
-    static void TryAssignClientToDictionary(TcpClient? tcpClient){
+    static void TryAssignClientToDictionary(TcpClient tcpClient){
         for (int i = 1; i <= connectedClientDictionary.Count; i++){
             if (connectedClientDictionary[i].tcpClient == default){
                 connectedClientDictionary[i] = new ClientSlot(i, tcpClient);
@@ -60,14 +54,35 @@ public class Server{
         Console.WriteLine("No available Client Slots");
         //TODO: Disconnect Client
     }
+
+   
 }
 
 internal class ClientSlot{
     public int id;
-    public TcpClient? tcpClient;
-
-    public ClientSlot(int _id, TcpClient? _tcpClient){
+    public TcpClient tcpClient;
+    public NetworkStream stream;
+    public int bufferSize = 4000;
+    public byte[] buffer;//4kb
+    public ClientSlot(int _id, TcpClient _tcpClient){
         id = _id;
         tcpClient = _tcpClient;
+        
+        buffer = new byte[bufferSize];
     }
+
+    void ReadFromStream(){
+        stream = tcpClient.GetStream();
+        var receivedByteSize = stream.ReadAsync(buffer,0,bufferSize).Result;
+        
+        if (receivedByteSize <= 0){
+            //No data received
+            return;
+        }
+        byte[] receivedDataBuffer = new byte[receivedByteSize];
+
+        //Copies the changed data in the buffer with the size gotten, onto a new array holding only the relevant new data
+        Array.Copy(buffer, receivedDataBuffer, receivedByteSize);
+    }
+    
 }
