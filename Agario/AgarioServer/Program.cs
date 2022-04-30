@@ -1,7 +1,10 @@
 ﻿using System.Net;
 using System.Net.Sockets;
+using System.Text;
+
 public class Server{
-    static byte[] buffer = new byte[4000]; //4kb
+    static readonly int bufferSize = 4000;
+    static byte[] buffer = new byte[bufferSize]; //4kb
     static readonly int port = 9000;
     static readonly IPEndPoint hostEndpoint = new IPEndPoint(IPAddress.Loopback, port);
     static TcpListener hostListener;
@@ -10,22 +13,26 @@ public class Server{
     
     
     public static void Main(){
+        ServerSetUp();
+
+        //Begins the connection process, but creates a new thread which deals with finishing it.
+        Console.WriteLine("Starting task to listen for new tcp Clients");
+        ListenForTcpClientsTask();
+        Console.Read();
+        
+        
+    }
+
+    static void ServerSetUp(){
         hostListener = new TcpListener(hostEndpoint);
 
         connectedClientDictionary = new Dictionary<int, ClientSlot>(maxClients);
 
-        CreateEmptyClientSlots(); 
-        
+        CreateEmptyClientSlots();
+
         Console.WriteLine($"Starting server...");
         hostListener.Start();
         Console.WriteLine($"Server Started (Port: {port})");
-        
-        //Begins the connection process, but creates a new thread which deals with finishing it.
-        Console.WriteLine("Starting task to listen for new tcp Clients");
-        ListenForTcpClients();
-        Console.Read();
-        
-        
     }
 
     static void CreateEmptyClientSlots(){
@@ -34,28 +41,56 @@ public class Server{
         }
     }
 
-    static async Task ListenForTcpClients(){
+    static async Task ListenForTcpClientsTask(){
         while (true){ 
             Console.WriteLine("Waiting for connection...");
             var tcpClient = await hostListener.AcceptTcpClientAsync();
-            TryAssignClientToDictionary(tcpClient);
+            
+            Console.WriteLine($"New Client accepted.");
+            var activatedClientSlot = TryAssignClientToDictionary(tcpClient);
+            
+            ReadFromStreamTask(activatedClientSlot);
         }
     }
 
-    static void TryAssignClientToDictionary(TcpClient tcpClient){
+    static ClientSlot TryAssignClientToDictionary(TcpClient tcpClient){
         for (int i = 1; i <= connectedClientDictionary.Count; i++){
             if (connectedClientDictionary[i].tcpClient == default){
                 connectedClientDictionary[i] = new ClientSlot(i, tcpClient);
-                Console.WriteLine($"New Client accepted: ({tcpClient}, Id: {i})");
-                return;
+                Console.WriteLine($"New Client: ({tcpClient}, Id: {i}).");
+                return connectedClientDictionary[i];
             }
         }
 
         Console.WriteLine("No available Client Slots");
         //TODO: Disconnect Client
+        throw new NotImplementedException();
+        return null;
     }
 
-   
+    static async Task ReadFromStreamTask(ClientSlot clientSlot){
+        var tcpClient = clientSlot.tcpClient;
+        var id = clientSlot.id;
+        var stream = clientSlot.tcpClient.GetStream();
+
+        while (true){
+            Console.WriteLine($"Listening for data stream from {tcpClient} ({id}).");
+            var receivedByteSize = await stream.ReadAsync(buffer,0,bufferSize);
+            Console.WriteLine($"Received data stream from {tcpClient} ({id}).");
+            
+            if (receivedByteSize <= 0){
+                //No data received
+                Console.WriteLine($"Data stream from {tcpClient} ({id}) was empty, discarding.");
+                return;
+            }
+            
+            byte[] receivedDataBuffer = new byte[receivedByteSize];
+
+            //Copies the changed data in the buffer with the size gotten, onto a new array holding only the relevant new data
+            Array.Copy(buffer, receivedDataBuffer, receivedByteSize);
+            Console.WriteLine(Encoding.ASCII.GetString(buffer));
+        }
+    }
 }
 
 internal class ClientSlot{
@@ -69,23 +104,8 @@ internal class ClientSlot{
         tcpClient = _tcpClient;
         
         buffer = new byte[bufferSize];
-        ReadFromStream();
     }
 
-    async Task ReadFromStream(){
-        stream = tcpClient.GetStream();
-        Console.WriteLine($"Listening for data stream from {tcpClient} ({id}).");
-        var receivedByteSize = await stream.ReadAsync(buffer,0,bufferSize);
-        Console.WriteLine($"Received data stream from {tcpClient} ({id}).");
-        if (receivedByteSize <= 0){
-            //No data received
-            Console.WriteLine($"Data stream from {tcpClient} ({id}) was empty, discarding.");
-            return;
-        }
-        byte[] receivedDataBuffer = new byte[receivedByteSize];
-
-        //Copies the changed data in the buffer with the size gotten, onto a new array holding only the relevant new data
-        Array.Copy(buffer, receivedDataBuffer, receivedByteSize);
-    }
+    
     
 }
