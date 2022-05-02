@@ -51,7 +51,7 @@ public class Server{
             Console.WriteLine($"New Client accepted.");
             var activatedClientSlot = TryAssignClientToDictionary(tcpClient);
 
-            ReadFromStreamTask(activatedClientSlot);
+           new Task(()=> ReadFromStreamTask(activatedClientSlot).Start()).Start();
         }
     }
 
@@ -122,10 +122,10 @@ internal class ClientSlot{
         tcpClient.Client.Disconnect(true);
         Console.WriteLine($"Client ({id}) disconnected.");
         
-        
         Console.WriteLine($"Clearing data for client ({id})...");
         id = 0;
         tcpClient.GetStream().Close();
+        tcpClient.GetStream().Dispose();
         tcpClient.Client.Close();
         tcpClient.Client.Dispose();
         tcpClient.Close();

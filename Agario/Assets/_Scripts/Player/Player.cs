@@ -34,4 +34,8 @@ public class Player : MonoBehaviour{
         Size = _size;
         playerCreatedEventSo.playerUnityEventSo.Invoke(this);
     }
+
+    public void SetName(string _name){
+        name = _name;
+    }
 }

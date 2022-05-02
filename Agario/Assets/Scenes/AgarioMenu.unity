@@ -313,6 +313,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 88037765}
   m_CullTransparentMesh: 1
+--- !u!1 &89828568 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 479778337907763216, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+  m_PrefabInstance: {fileID: 243612613}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &89828569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89828568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fbca188af6be0d47ad023e19b6a110e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sendableInformationSo: {fileID: 11400000, guid: 719fee39765064046866468151b0159d, type: 2}
+  clientPort: 9002
 --- !u!224 &91450543 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4036755094023636406, guid: b2753d70c34c6cd499fd34053f943de1, type: 3}
@@ -561,6 +580,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 222845037}
   m_CullTransparentMesh: 1
+--- !u!1001 &243612613
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 479778337907763216, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_Name
+      value: PlayerClient 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 479778337907763218, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 479778337907763218, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 479778337907763218, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 479778337907763218, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 479778337907763218, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 479778337907763218, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 479778337907763218, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 479778337907763218, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 479778337907763218, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 479778337907763218, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 479778337907763218, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 479778337907763219, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c8ba692437644234a8b593bc9a253fec, type: 3}
 --- !u!1 &330316135
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,6 +727,18 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 617670696}
+        m_TargetAssemblyTypeName: PersonalClient, Assembly-CSharp
+        m_MethodName: Connect
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 89828569}
         m_TargetAssemblyTypeName: PersonalClient, Assembly-CSharp
         m_MethodName: Connect
         m_Mode: 1
@@ -992,6 +1084,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sendableInformationSo: {fileID: 11400000, guid: 719fee39765064046866468151b0159d, type: 2}
+  clientPort: 9001
 --- !u!1 &732631722
 GameObject:
   m_ObjectHideFlags: 0
@@ -2510,7 +2603,7 @@ GameObject:
   - component: {fileID: 1627188496}
   - component: {fileID: 1627188499}
   m_Layer: 5
-  m_Name: InputField (TMP)
+  m_Name: InputField Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

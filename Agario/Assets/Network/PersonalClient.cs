@@ -20,14 +20,39 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
     TcpClient tcpClient;
     NetworkStream stream;
     byte[] buffer = new byte[bufferSize];
+    
+    bool canConnect = true;
+    public static bool hasValidName = true;
+    public static bool hasIpAddress = true;
 
+
+   
 
 
     public void Connect(){
+        canConnect = hasValidName && hasIpAddress;
+        if (!canConnect){
+            if (!hasValidName){
+                Debug.Log("Please Input a name without spaces or special characters");
+            }
+            return;
+
+        }
+        
         serverEndPoint = new IPEndPoint(IPAddress.Loopback, 9000);
         clientEndPoint = new IPEndPoint(IPAddress.Loopback, clientPort);
+
+        try{
+            tcpClient = new TcpClient(clientEndPoint);
+        }
+        catch (SocketException socketException){
+            tcpClient = default;
+            clientPort++;
+            Connect();
+            return;
+            //tcpClient = new TcpClient(clientEndPoint);
+        }
         
-        tcpClient = new TcpClient(clientEndPoint);
        
         Debug.Log("Begin looking for connection...");
         tcpClient.Client.BeginConnect(serverEndPoint.Address,serverEndPoint.Port,BeginConnectCallback,tcpClient);
@@ -52,7 +77,7 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
         stream = tcpClient.GetStream();
         Debug.Log("Stream connected.");
         
-        WriteOnStreamTask(data);
+        new Task(() => WriteOnStreamTask(data).Start()).Start();
     }
    
     async Task WriteOnStreamTask(byte[] data){
@@ -64,15 +89,13 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
 
     void BeginWriteCallback(IAsyncResult result){
         stream.EndWrite(result);
-        //stream.Close();
     }
 
     #endregion
 
     public void SendTestData(){
         //TEST
-        byte[] testBuffer = new byte[100];
-        testBuffer = Encoding.ASCII.GetBytes("Hello");
+        var testBuffer = Encoding.ASCII.GetBytes("Hello");
         sendableInformationSo.dataUnityEventSo.Invoke(testBuffer);
         //END OF TEST
     }
@@ -81,6 +104,9 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
     void OnApplicationQuit(){
         // tcpClient.Client.Disconnect(true);
         stream.Close();
+        stream.Dispose();
+        tcpClient.Client.Close();
+        tcpClient.Dispose();
         // // stream.Dispose();
         // // tcpClient.Close();
         // // tcpClient.Dispose();
