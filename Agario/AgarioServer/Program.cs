@@ -6,7 +6,7 @@ public class Server{
     static readonly int bufferSize = 4000;
     static byte[] buffer = new byte[bufferSize]; //4kb
     static readonly int port = 9000;
-    static readonly IPEndPoint hostEndpoint = new IPEndPoint(IPAddress.Loopback, port);
+    static readonly IPEndPoint hostEndpoint = new IPEndPoint(IPAddress.Any, port);
     static TcpListener hostListener;
     static int maxClients = 10;
     static Dictionary<int, ClientSlot> connectedClientDictionary;
@@ -51,7 +51,7 @@ public class Server{
             Console.WriteLine($"New Client accepted.");
             var activatedClientSlot = TryAssignClientToDictionary(tcpClient);
 
-            await ReadFromStreamTask(activatedClientSlot);
+            ReadFromStreamTask(activatedClientSlot);
         }
     }
 
@@ -71,7 +71,7 @@ public class Server{
     }
 
     static async Task ReadFromStreamTask(ClientSlot clientSlot){
-        var tcpClient = clientSlot.tcpClient;
+        var tcpClient = clientSlot.tcpClient.Client;
         var id = clientSlot.id;
         var stream = clientSlot.tcpClient.GetStream();
 
@@ -84,10 +84,8 @@ public class Server{
             if (receivedByteSize <= 0){
                 //No data received
                 Console.WriteLine($"Data stream from {tcpClient} ({id}) was empty, discarding.");
-               // connectedClientDictionary[id].tcpClient.Dispose();
-                clientSlot.ClearAllData(id); 
-                stream.Socket.Close();
-               // clearDataEvent.Invoke(id);
+                
+                clientSlot.ClearAllData(id);
                 continue;
             }
             
@@ -97,16 +95,6 @@ public class Server{
             Array.Copy(buffer, receivedDataBuffer, receivedByteSize);
             Console.WriteLine(Encoding.ASCII.GetString(buffer));
         }
-
-        Console.WriteLine($"Closing Stream ({id})...");
-        stream.Close();
-        Console.WriteLine($"Stream ({id}) Closed.");
-        await stream.DisposeAsync();
-        
-        Console.WriteLine($"Closing Client ({id})...");
-        clientSlot.tcpClient.Close();
-        Console.WriteLine($"Client ({id}) Closed.");
-        clientSlot.tcpClient.Dispose();
     }
 }
 
@@ -129,15 +117,22 @@ internal class ClientSlot{
         if (id != _id){
             return;
         }
-
-        Console.WriteLine($"Clearing data for client ({id})");
+        
+        Console.WriteLine($"Disconnecting client ({id})...");
+        tcpClient.Client.Disconnect(true);
+        Console.WriteLine($"Client ({id}) disconnected.");
+        
+        
+        Console.WriteLine($"Clearing data for client ({id})...");
         id = 0;
         tcpClient.GetStream().Close();
+        tcpClient.Client.Close();
+        tcpClient.Client.Dispose();
         tcpClient.Close();
         tcpClient.Dispose();
-        
         tcpClient = default;
         GC.Collect();
+        Console.WriteLine($"Data for client ({id}) has been cleared.");
     }
 
 }

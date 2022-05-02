@@ -10,6 +10,7 @@ using UnityEngine.Scripting;
 
 public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to not have to deal with async in unity rn
     [SerializeField] ByteArrayUnityEventSo sendableInformationSo;
+    [SerializeField] int clientPort = 9001;
 
     static IPEndPoint serverEndPoint;
     static IPEndPoint clientEndPoint;
@@ -24,12 +25,12 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
 
     public void Connect(){
         serverEndPoint = new IPEndPoint(IPAddress.Loopback, 9000);
-        clientEndPoint = new IPEndPoint(IPAddress.Loopback, 9001);
+        clientEndPoint = new IPEndPoint(IPAddress.Loopback, clientPort);
         
         tcpClient = new TcpClient(clientEndPoint);
        
         Debug.Log("Begin looking for connection...");
-        tcpClient.BeginConnect(serverEndPoint.Address,serverEndPoint.Port,BeginConnectCallback,tcpClient);
+        tcpClient.Client.BeginConnect(serverEndPoint.Address,serverEndPoint.Port,BeginConnectCallback,tcpClient);
         
         sendableInformationSo.dataUnityEventSo.AddListener(WriteOnStream);
     }
@@ -37,7 +38,7 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
     
     
     void BeginConnectCallback(IAsyncResult callbackResult){
-        tcpClient.EndConnect(callbackResult);
+        tcpClient.Client.EndConnect(callbackResult);
         Debug.Log("Connection established.");
         
     }
@@ -78,12 +79,13 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
    
    
     void OnApplicationQuit(){
+        // tcpClient.Client.Disconnect(true);
         stream.Close();
-        stream.Dispose();
-        tcpClient.Close();
-        tcpClient.Dispose();
-        tcpClient = null;
-        clientEndPoint = null;
-        GC.Collect();
+        // // stream.Dispose();
+        // // tcpClient.Close();
+        // // tcpClient.Dispose();
+        // // tcpClient = null;
+        // // clientEndPoint = null;
+        // // GC.Collect();
     }
 }
