@@ -24,13 +24,12 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
 
     public void Connect(){
         serverEndPoint = new IPEndPoint(IPAddress.Loopback, 9000);
-        clientEndPoint = new IPEndPoint(IPAddress.Loopback, 9002);
+        clientEndPoint = new IPEndPoint(IPAddress.Loopback, 9001);
         
         tcpClient = new TcpClient(clientEndPoint);
        
         Debug.Log("Begin looking for connection...");
         tcpClient.BeginConnect(serverEndPoint.Address,serverEndPoint.Port,BeginConnectCallback,tcpClient);
-
         
         sendableInformationSo.dataUnityEventSo.AddListener(WriteOnStream);
     }
@@ -64,7 +63,7 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
 
     void BeginWriteCallback(IAsyncResult result){
         stream.EndWrite(result);
-        stream.Close();
+        //stream.Close();
     }
 
     #endregion
@@ -84,6 +83,7 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
         tcpClient.Close();
         tcpClient.Dispose();
         tcpClient = null;
+        clientEndPoint = null;
         GC.Collect();
     }
 }

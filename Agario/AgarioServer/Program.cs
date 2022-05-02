@@ -57,7 +57,7 @@ public class Server{
 
     static ClientSlot TryAssignClientToDictionary(TcpClient tcpClient){
         for (int i = 1; i <= connectedClientDictionary.Count; i++){
-            if (connectedClientDictionary[i].id == 0){
+            if (connectedClientDictionary[i].id == default){
                 connectedClientDictionary[i] = new ClientSlot(i, tcpClient);
                 Console.WriteLine($"New Client: ({tcpClient}, Id: {i}).");
                 return connectedClientDictionary[i];
@@ -85,9 +85,9 @@ public class Server{
                 //No data received
                 Console.WriteLine($"Data stream from {tcpClient} ({id}) was empty, discarding.");
                // connectedClientDictionary[id].tcpClient.Dispose();
-               clientSlot.ClearAllData(id);
-               stream.Socket.Close();
-               clearDataEvent.Invoke(id);
+                clientSlot.ClearAllData(id); 
+                stream.Socket.Close();
+               // clearDataEvent.Invoke(id);
                 continue;
             }
             
@@ -135,8 +135,9 @@ internal class ClientSlot{
         tcpClient.GetStream().Close();
         tcpClient.Close();
         tcpClient.Dispose();
-        GC.Collect();
+        
         tcpClient = default;
+        GC.Collect();
     }
-    
+
 }
