@@ -25,7 +25,7 @@ public class Movement : MonoBehaviour{
       EnsureStayingOnMap();
      
       if (Input.GetMouseButton(0)){
-         Vector2 mousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
+         Vector3 mousePosition = camera.ScreenToWorldPoint(Input.mousePosition);
          
          transform.position = Vector2.MoveTowards(transform.position,mousePosition,CalculateSpeed()*Time.deltaTime);
       }

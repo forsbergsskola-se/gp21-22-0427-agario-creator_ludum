@@ -53,18 +53,22 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
             //tcpClient = new TcpClient(clientEndPoint);
         }
         
-       
-        Debug.Log("Begin looking for connection...");
-        tcpClient.Client.BeginConnect(serverEndPoint.Address,serverEndPoint.Port,BeginConnectCallback,tcpClient);
         
+        //tcpClient.Client.BeginConnect(serverEndPoint.Address,serverEndPoint.Port,BeginConnectCallback,tcpClient);
+        new Task(() => ConnectToServer().Start()).Start();
+
         sendableInformationSo.dataUnityEventSo.AddListener(WriteOnStream);
+        
     }
 
-    
-    
-    void BeginConnectCallback(IAsyncResult callbackResult){
-        tcpClient.Client.EndConnect(callbackResult);
+    async Task ConnectToServer(){
+        Debug.Log("Begin looking for connection...");
+        await tcpClient.Client.ConnectAsync(serverEndPoint);
         Debug.Log("Connection established.");
+        
+        Debug.Log("Connecting stream...");
+        stream = tcpClient.GetStream();
+        Debug.Log("Stream connected.");
         
     }
 
@@ -72,18 +76,13 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
 
     void WriteOnStream(byte[] data){ //Because Unity is silly and cant directly send the data to a task :(
         Debug.Log("Received event with data to send, forwarding...");
-        
-        Debug.Log("Connecting stream...");
-        stream = tcpClient.GetStream();
-        Debug.Log("Stream connected.");
-        
         new Task(() => WriteOnStreamTask(data).Start()).Start();
     }
    
     async Task WriteOnStreamTask(byte[] data){
-        
         Debug.Log("Attempting to send data to host...");
-        stream.BeginWrite(data, 0, data.Length, BeginWriteCallback, stream);
+        //stream.BeginWrite(data, 0, data.Length, BeginWriteCallback, stream);
+        await stream.WriteAsync(data, 0, data.Length);
         Debug.Log("Data sent to host.");
     }
 
@@ -103,10 +102,13 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
    
     void OnApplicationQuit(){
         // tcpClient.Client.Disconnect(true);
-        stream.Close();
-        stream.Dispose();
-        tcpClient.Client.Close();
-        tcpClient.Dispose();
+        if (tcpClient != null){
+            stream.Close();
+            stream.Dispose();
+            tcpClient.Client.Close();
+            tcpClient.Dispose();
+        }
+        
         // // stream.Dispose();
         // // tcpClient.Close();
         // // tcpClient.Dispose();
