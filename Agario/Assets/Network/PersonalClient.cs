@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -12,14 +13,15 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
     [SerializeField] ByteArrayUnityEventSo sendableInformationSo;
     [SerializeField] int clientPort = 9001;
 
-    static IPEndPoint serverEndPoint;
-    static IPEndPoint clientEndPoint;
-    static readonly int bufferSize = 4000;
+    static IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Loopback, 9000);
+    //static readonly int bufferSize = 4000;
    
    
-    TcpClient tcpClient;
+    TcpClient tcpClient = new TcpClient();
+    StreamReader streamReader;
+    StreamWriter streamWriter;
     NetworkStream stream;
-    byte[] buffer = new byte[bufferSize];
+    //byte[] buffer = new byte[bufferSize];
     
     bool canConnect = true;
     public static bool hasValidName = true;
@@ -38,23 +40,7 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
             return;
 
         }
-        
-        serverEndPoint = new IPEndPoint(IPAddress.Loopback, 9000);
-        clientEndPoint = new IPEndPoint(IPAddress.Loopback, clientPort);
 
-        try{
-            tcpClient = new TcpClient(clientEndPoint);
-        }
-        catch (SocketException socketException){
-            tcpClient = default;
-            clientPort++;
-            Connect();
-            return;
-            //tcpClient = new TcpClient(clientEndPoint);
-        }
-        
-        
-        //tcpClient.Client.BeginConnect(serverEndPoint.Address,serverEndPoint.Port,BeginConnectCallback,tcpClient);
         new Task(() => ConnectToServer().Start()).Start();
 
         sendableInformationSo.dataUnityEventSo.AddListener(WriteOnStream);
@@ -69,7 +55,11 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
         Debug.Log("Connecting stream...");
         stream = tcpClient.GetStream();
         Debug.Log("Stream connected.");
-        
+
+        streamReader = new StreamReader(stream);
+        streamWriter = new StreamWriter(stream);
+        streamWriter.AutoFlush = true;
+
     }
 
     #region WriteOnStreamRegion
@@ -82,12 +72,8 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
     async Task WriteOnStreamTask(byte[] data){
         Debug.Log("Attempting to send data to host...");
         //stream.BeginWrite(data, 0, data.Length, BeginWriteCallback, stream);
-        await stream.WriteAsync(data, 0, data.Length);
+        await streamWriter.WriteAsync(Encoding.ASCII.GetString(data));
         Debug.Log("Data sent to host.");
-    }
-
-    void BeginWriteCallback(IAsyncResult result){
-        stream.EndWrite(result);
     }
 
     #endregion

@@ -3,8 +3,6 @@ using System.Net.Sockets;
 using System.Text;
 
 public class Server{
-    static readonly int bufferSize = 4000;
-    static byte[] buffer = new byte[bufferSize]; //4kb
     static readonly int port = 9000;
     static readonly IPEndPoint hostEndpoint = new IPEndPoint(IPAddress.Any, port);
     static TcpListener hostListener;
@@ -59,7 +57,7 @@ public class Server{
         for (int i = 1; i <= connectedClientDictionary.Count; i++){
             if (connectedClientDictionary[i].id == default){
                 connectedClientDictionary[i] = new ClientSlot(i, tcpClient);
-                Console.WriteLine($"New Client: ({tcpClient}, Id: {i}).");
+                Console.WriteLine($"New Client: ({tcpClient.Client.RemoteEndPoint}, Id: {i}).");
                 return connectedClientDictionary[i];
             }
         }
@@ -73,27 +71,32 @@ public class Server{
     static async Task ReadFromStreamTask(ClientSlot clientSlot){
         var tcpClient = clientSlot.tcpClient.Client;
         var id = clientSlot.id;
+        var address = clientSlot.tcpClient.Client.RemoteEndPoint;
         var stream = clientSlot.tcpClient.GetStream();
+        var streamReader = new StreamReader(stream);
+        var streamWriter = new StreamWriter(stream);
+        streamWriter.AutoFlush = true;
 
         while (tcpClient.Connected){
             
-            Console.WriteLine($"Listening for data stream from {tcpClient} ({id}).");
-            var receivedByteSize = await stream.ReadAsync(buffer,0,bufferSize);
-            Console.WriteLine($"Received data stream from {tcpClient} ({id}).");
+             int bufferSize = 4000;
+             char[] buffer = new char[bufferSize]; //4kb
+           
+            Console.WriteLine($"Listening for data stream from {address} ({id}).");
+            var receivedByteSize = await streamReader.ReadAsync(buffer, 0, bufferSize);
+            //var receivedByteSize = await stream.ReadAsync(buffer,0,bufferSize);
+            Console.WriteLine($"Received data stream from {address} ({id}).");
             
             if (receivedByteSize <= 0){
                 //No data received
-                Console.WriteLine($"Data stream from {tcpClient} ({id}) was empty, discarding.");
+                Console.WriteLine($"Data stream from {address} ({id}) was empty, discarding.");
                 
+                //Disconnecting Client
                 clientSlot.ClearAllData(id);
+                
                 continue;
             }
-            
-            byte[] receivedDataBuffer = new byte[receivedByteSize];
-
-            //Copies the changed data in the buffer with the size gotten, onto a new array holding only the relevant new data
-            Array.Copy(buffer, receivedDataBuffer, receivedByteSize);
-            Console.WriteLine(Encoding.ASCII.GetString(buffer));
+            Console.WriteLine(Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(buffer),0,receivedByteSize));
         }
     }
 }
