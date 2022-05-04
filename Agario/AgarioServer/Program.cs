@@ -1,6 +1,10 @@
-﻿using System.Net;
+﻿using System.Drawing;
+using System.Net;
 using System.Net.Sockets;
+using System.Numerics;
 using System.Text;
+using System.Text.Json;
+using AgarioServer;
 
 public class Server{
     static readonly int port = 9000;
@@ -49,7 +53,7 @@ public class Server{
             Console.WriteLine($"New Client accepted.");
             var activatedClientSlot = TryAssignClientToDictionary(tcpClient);
 
-           new Task(()=> ReadFromStreamTask(activatedClientSlot).Start()).Start();
+            new Task(()=> ReadFromStreamTask(activatedClientSlot).Start()).Start();
         }
     }
 
@@ -57,7 +61,7 @@ public class Server{
         for (int i = 1; i <= connectedClientDictionary.Count; i++){
             if (connectedClientDictionary[i].id == default){
                 connectedClientDictionary[i] = new ClientSlot(i, tcpClient);
-                Console.WriteLine($"New Client: ({tcpClient.Client.RemoteEndPoint}, Id: {i}).");
+                Console.WriteLine($"New Client: ({tcpClient.Client.RemoteEndPoint}, Id: ({i}).");
                 return connectedClientDictionary[i];
             }
         }
@@ -76,18 +80,16 @@ public class Server{
         var streamReader = new StreamReader(stream);
         var streamWriter = new StreamWriter(stream);
         streamWriter.AutoFlush = true;
+        var jsonOptions = new JsonSerializerOptions(){
+            IncludeFields = true
+        };
 
         while (tcpClient.Connected){
-            
-             int bufferSize = 4000;
-             char[] buffer = new char[bufferSize]; //4kb
-           
+
             Console.WriteLine($"Listening for data stream from {address} ({id}).");
-            var receivedByteSize = await streamReader.ReadAsync(buffer, 0, bufferSize);
-            //var receivedByteSize = await stream.ReadAsync(buffer,0,bufferSize);
-            Console.WriteLine($"Received data stream from {address} ({id}).");
-            
-            if (receivedByteSize <= 0){
+            string jsonString = await streamReader.ReadLineAsync();
+
+            if (jsonString == default){
                 //No data received
                 Console.WriteLine($"Data stream from {address} ({id}) was empty, discarding.");
                 
@@ -96,7 +98,28 @@ public class Server{
                 
                 continue;
             }
-            Console.WriteLine(Encoding.ASCII.GetString(Encoding.ASCII.GetBytes(buffer),0,receivedByteSize));
+
+            Console.WriteLine($"Received data from {address} ({id})");
+
+            Console.WriteLine("Deseralizing data...");
+            var message = JsonSerializer.Deserialize<Message>(jsonString, jsonOptions);
+            Console.WriteLine($"Data Deseralized, Type: {message.messageName}");
+            if (message.messageName == "ConnectToServerMessage"){
+                var playerConnectToServerData = JsonSerializer.Deserialize<ConnectToServerMessage>(jsonString, jsonOptions);
+                Console.WriteLine($"Received data of type ({message.messageName}) from {address} ({id})");
+                clientSlot.player.name = playerConnectToServerData.name;
+                Console.WriteLine($"Name: {playerConnectToServerData.name} ({id})");
+                clientSlot.player.color = playerConnectToServerData.color;
+                Console.WriteLine($"Color: {playerConnectToServerData.color} ({id})");
+            }
+            else{
+                Console.WriteLine("Faulty Message name");
+            }
+            
+           
+            
+
+
         }
     }
 }
@@ -104,6 +127,7 @@ public class Server{
 internal class ClientSlot{
     public int id;
     public TcpClient tcpClient;
+    public Player player;
     public int bufferSize = 4000;
     public byte[] buffer;//4kb
     
@@ -114,6 +138,7 @@ internal class ClientSlot{
 
         Server.clearDataEvent +=  ClearAllData;
         buffer = new byte[bufferSize];
+        player = new Player();
     }
 
     public void ClearAllData(int _id){
@@ -138,4 +163,18 @@ internal class ClientSlot{
         Console.WriteLine($"Data for client ({id}) has been cleared.");
     }
 
+
+    
+
+}
+public class Player{
+    public string name;
+    public Color color;
+    public Vector3 position;
+    
+    public float size = 3f; 
+    public int score = 0;
+    
+
+    
 }

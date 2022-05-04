@@ -18,7 +18,7 @@ public class Program{
 
             var udpReceivedDataAsString = Encoding.ASCII.GetString(udpReceivedData).Trim();
             
-            if (udpReceivedData == null || !IsWordCheck(udpReceivedDataAsString)){
+            if (udpReceivedData == null || !IsValidWordCheck(udpReceivedDataAsString)){
                 //throw new NullReferenceException();
                 Console.WriteLine("Received Invalid Package, discarding");
                 Console.WriteLine("Sending empty response...");
@@ -40,7 +40,7 @@ public class Program{
         server.Close();
     }
     
-    static bool IsWordCheck(String text) {
+    static bool IsValidWordCheck(String text) {
         return (text.Length > 0 && text.Length <= 20 && !(text.Split(",.;: ".ToCharArray()).Length > 1));
     }
 }

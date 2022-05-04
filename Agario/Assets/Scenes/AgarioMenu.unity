@@ -330,8 +330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fbca188af6be0d47ad023e19b6a110e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sendableInformationSo: {fileID: 11400000, guid: 719fee39765064046866468151b0159d, type: 2}
-  clientPort: 9002
+  playerInfo: {fileID: 0}
 --- !u!224 &91450543 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4036755094023636406, guid: b2753d70c34c6cd499fd34053f943de1, type: 3}
@@ -886,7 +885,7 @@ MonoBehaviour:
   redSlider: {fileID: 499852161}
   greenSlider: {fileID: 176348656}
   blueSlider: {fileID: 40513827}
-  playerColor: {r: 0, g: 0, b: 0, a: 0}
+  playerInfo: {fileID: 617670699}
 --- !u!1 &499852159
 GameObject:
   m_ObjectHideFlags: 0
@@ -1071,8 +1070,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fbca188af6be0d47ad023e19b6a110e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sendableInformationSo: {fileID: 11400000, guid: 719fee39765064046866468151b0159d, type: 2}
-  clientPort: 9001
+  playerInfo: {fileID: 617670699}
+--- !u!114 &617670699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617670695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6526c38b3998a9141bf0df0d702509d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: 
+  color: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &732631722
 GameObject:
   m_ObjectHideFlags: 0
@@ -1311,7 +1323,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 617670696}
         m_TargetAssemblyTypeName: PersonalClient, Assembly-CSharp
-        m_MethodName: SendTestData
+        m_MethodName: SendConnectToServerData
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1635,7 +1647,7 @@ GameObject:
   - component: {fileID: 1027423683}
   - component: {fileID: 1027423684}
   m_Layer: 0
-  m_Name: circle
+  m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2709,6 +2721,7 @@ GameObject:
   - component: {fileID: 1627188497}
   - component: {fileID: 1627188496}
   - component: {fileID: 1627188499}
+  - component: {fileID: 1627188500}
   m_Layer: 5
   m_Name: InputField Name
   m_TagString: Untagged
@@ -2891,6 +2904,19 @@ MonoBehaviour:
   setImageColor: 1
   setTextColor: 0
   updateColor: 0
+--- !u!114 &1627188500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1627188494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1528d1bc49c0f3543aa871f950bfef9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerInfo: {fileID: 617670699}
 --- !u!1 &1689986420
 GameObject:
   m_ObjectHideFlags: 0

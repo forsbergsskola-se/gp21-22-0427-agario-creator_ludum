@@ -6,45 +6,49 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Scripting;
+using Newtonsoft.Json;
 
 public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to not have to deal with async in unity rn
-    [SerializeField] ByteArrayUnityEventSo sendableInformationSo;
-    [SerializeField] int clientPort = 9001;
 
+    [SerializeField] PlayerInfo playerInfo;
+    
     static IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Loopback, 9000);
-    //static readonly int bufferSize = 4000;
-   
-   
+
+
     TcpClient tcpClient = new TcpClient();
     StreamReader streamReader;
     StreamWriter streamWriter;
     NetworkStream stream;
-    //byte[] buffer = new byte[bufferSize];
+
+    string nameCriteria = ",.;: ";
+    const int maxNameLenght = 15;
+
+    bool _isConnected;
+    public bool IsConnected{
+        get => _isConnected;
+        private set{
+            _isConnected = value;
+            if (_isConnected){
+                SendConnectToServerData();
+            }
+            
+            
+        }
+    }
     
-    bool canConnect = true;
-    public static bool hasValidName = true;
-    public static bool hasIpAddress = true;
-
-
-   
-
 
     public void Connect(){
-        canConnect = hasValidName && hasIpAddress;
-        if (!canConnect){
-            if (!hasValidName){
-                Debug.Log("Please Input a name without spaces or special characters");
-            }
-            return;
-
-        }
-
-        new Task(() => ConnectToServer().Start()).Start();
-
-        sendableInformationSo.dataUnityEventSo.AddListener(WriteOnStream);
         
+
+        if (!IsValidNameCheck(playerInfo.name)){
+            Debug.Log($"Please Input a name without a space or any of the following characters: {nameCriteria}");
+            return;
+        }
+        
+        new Task(() => ConnectToServer().Start()).Start();
     }
 
     async Task ConnectToServer(){
@@ -59,47 +63,40 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
         streamReader = new StreamReader(stream);
         streamWriter = new StreamWriter(stream);
         streamWriter.AutoFlush = true;
+        IsConnected = true; // Calls SendConnectToServerData
+    }
+    
 
+    public void SendConnectToServerData(){
+        var playerInfoMessage = new ConnectToServerMessage<string>(){
+            messageName = "ConnectToServerMessage",
+            name = this.playerInfo.name,
+            color = this.playerInfo.color
+        };
+
+        new Task(() =>SendMessageAsync(playerInfoMessage).Start()).Start();
     }
 
-    #region WriteOnStreamRegion
 
-    void WriteOnStream(byte[] data){ //Because Unity is silly and cant directly send the data to a task :(
-        Debug.Log("Received event with data to send, forwarding...");
-        new Task(() => WriteOnStreamTask(data).Start()).Start();
-    }
-   
-    async Task WriteOnStreamTask(byte[] data){
+    async Task SendMessageAsync<T>(T message){
         Debug.Log("Attempting to send data to host...");
-        //stream.BeginWrite(data, 0, data.Length, BeginWriteCallback, stream);
-        await streamWriter.WriteAsync(Encoding.ASCII.GetString(data));
+        await streamWriter.WriteLineAsync(JsonUtility.ToJson(message));
         Debug.Log("Data sent to host.");
+        await streamWriter.FlushAsync();
     }
-
-    #endregion
-
-    public void SendTestData(){
-        //TEST
-        var testBuffer = Encoding.ASCII.GetBytes("Hello");
-        sendableInformationSo.dataUnityEventSo.Invoke(testBuffer);
-        //END OF TEST
+    
+    bool IsValidNameCheck(String _name) {
+        return (_name.Length is > 0 and <= maxNameLenght && !(_name.Split(nameCriteria.ToCharArray()).Length > 1));
     }
    
    
     void OnApplicationQuit(){
-        // tcpClient.Client.Disconnect(true);
         if (tcpClient != null){
             stream.Close();
             stream.Dispose();
             tcpClient.Client.Close();
             tcpClient.Dispose();
+            GC.Collect();
         }
-        
-        // // stream.Dispose();
-        // // tcpClient.Close();
-        // // tcpClient.Dispose();
-        // // tcpClient = null;
-        // // clientEndPoint = null;
-        // // GC.Collect();
     }
 }
