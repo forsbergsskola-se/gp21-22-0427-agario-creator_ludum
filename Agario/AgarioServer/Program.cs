@@ -97,7 +97,7 @@ public class Server{
         while (tcpClient.Connected){
 
             Console.WriteLine($"Listening for data stream from {address} ({id}).");
-            string jsonString = await streamReader.ReadLineAsync();
+            var jsonString = await streamReader.ReadLineAsync();
             
             if (jsonString == default){
                 //No data received
@@ -140,8 +140,11 @@ public class Server{
         var stream = clientSlot.tcpClient.GetStream();
         var streamWriter = new StreamWriter(stream);
         streamWriter.AutoFlush = true;
+        var jsonOptions = new JsonSerializerOptions(){
+            IncludeFields = true
+        };
 
-        InitialServerToClientMessage message = new InitialServerToClientMessage{
+        InitialServerToClientMessage message = new (){
             messageName = "InitialServerToClientMessage",
             id = clientSlot.id,
             playerDictionary = connectedPlayerDictionary,
@@ -149,7 +152,7 @@ public class Server{
         };
 
         Console.WriteLine($"Awaiting to send {message.messageName} to: {address} ({id})...");
-        await streamWriter.WriteLineAsync(JsonSerializer.Serialize<InitialServerToClientMessage>(message));
+        await streamWriter.WriteLineAsync(JsonSerializer.Serialize(message,jsonOptions));
         Console.WriteLine($"Sent {message.messageName} to: {address} ({id}).");
 
     }

@@ -330,7 +330,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fbca188af6be0d47ad023e19b6a110e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerInfo: {fileID: 0}
+  playerInfo: {fileID: 89828572}
+--- !u!114 &89828572
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 89828568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6526c38b3998a9141bf0df0d702509d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0
+  name: TestName
+  color: {r: 1, g: 0, b: 0, a: 0}
+  score: 0
+  size: 0
 --- !u!224 &91450543 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4036755094023636406, guid: b2753d70c34c6cd499fd34053f943de1, type: 3}
@@ -1083,8 +1100,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6526c38b3998a9141bf0df0d702509d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 0
   name: 
   color: {r: 0, g: 0, b: 0, a: 0}
+  score: 0
+  size: 0
 --- !u!1 &732631722
 GameObject:
   m_ObjectHideFlags: 0
