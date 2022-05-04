@@ -10,8 +10,10 @@ public class Server{
     static readonly int port = 9000;
     static readonly IPEndPoint hostEndpoint = new IPEndPoint(IPAddress.Any, port);
     static TcpListener hostListener;
+    static UdpClient udpHost;
     static int maxClients = 10;
     static Dictionary<int, ClientSlot> connectedClientDictionary;
+    static Dictionary<int, Player> connectedPlayerDictionary;
 
     public static Action<int> clearDataEvent;
     
@@ -22,6 +24,7 @@ public class Server{
         //Begins the connection process, but creates a new thread which deals with finishing it.
         Console.WriteLine("Starting task to listen for new tcp Clients");
         ListenForTcpClientsTask();
+        ReceiveUdpDataTask();
         Console.Read();
         
         
@@ -29,13 +32,16 @@ public class Server{
 
     static void ServerSetUp(){
         hostListener = new TcpListener(hostEndpoint);
-
+        udpHost = new UdpClient(hostEndpoint);
+        
         connectedClientDictionary = new Dictionary<int, ClientSlot>(maxClients);
+        connectedPlayerDictionary = new Dictionary<int, Player>(maxClients);
 
         CreateEmptyClientSlots();
 
         Console.WriteLine($"Starting server...");
         hostListener.Start();
+        //udpHost.Receive();
         Console.WriteLine($"Server Started (Port: {port})");
     }
 
@@ -54,6 +60,7 @@ public class Server{
             var activatedClientSlot = TryAssignClientToDictionary(tcpClient);
 
             new Task(()=> ReadFromStreamTask(activatedClientSlot).Start()).Start();
+            new Task(() => SendTcpDataTask(activatedClientSlot).Start()).Start();
         }
     }
 
@@ -62,6 +69,9 @@ public class Server{
             if (connectedClientDictionary[i].id == default){
                 connectedClientDictionary[i] = new ClientSlot(i, tcpClient);
                 Console.WriteLine($"New Client: ({tcpClient.Client.RemoteEndPoint}, Id: ({i}).");
+
+                connectedPlayerDictionary[i] = connectedClientDictionary[i].player;
+                
                 return connectedClientDictionary[i];
             }
         }
@@ -88,7 +98,7 @@ public class Server{
 
             Console.WriteLine($"Listening for data stream from {address} ({id}).");
             string jsonString = await streamReader.ReadLineAsync();
-
+            
             if (jsonString == default){
                 //No data received
                 Console.WriteLine($"Data stream from {address} ({id}) was empty, discarding.");
@@ -113,16 +123,73 @@ public class Server{
                 Console.WriteLine($"Color: {playerConnectToServerData.color} ({id})");
             }
             else{
-                Console.WriteLine("Faulty Message name");
+                Console.WriteLine("Faulty Tcp Message name");
             }
-            
-           
-            
-
 
         }
     }
+
+    static async Task SendTcpDataTask(ClientSlot clientSlot){
+        await SendInitialTcpConnectionData(clientSlot);
+        //TODO: Update data
+    }
+
+    static async Task SendInitialTcpConnectionData(ClientSlot clientSlot){
+        var id = clientSlot.id;
+        var address = clientSlot.tcpClient.Client.RemoteEndPoint;
+        var stream = clientSlot.tcpClient.GetStream();
+        var streamWriter = new StreamWriter(stream);
+        streamWriter.AutoFlush = true;
+
+        InitialServerToClientMessage message = new InitialServerToClientMessage{
+            messageName = "InitialServerToClientMessage",
+            id = clientSlot.id,
+            playerDictionary = connectedPlayerDictionary,
+            position = new Vector2(5, 5) //TODO: GetRandomPosition();
+        };
+
+        Console.WriteLine($"Awaiting to send {message.messageName} to: {address} ({id})...");
+        await streamWriter.WriteLineAsync(JsonSerializer.Serialize<InitialServerToClientMessage>(message));
+        Console.WriteLine($"Sent {message.messageName} to: {address} ({id}).");
+
+    }
+
+    static async Task ReceiveUdpDataTask(){
+        while (true){
+            Console.WriteLine("Awaiting Udp Package...");
+            var udpReceiveResult = await udpHost.ReceiveAsync();
+            Console.WriteLine("Udp Package received.");
+            new Task(() => { HandleReceivedUdpDataTask(udpReceiveResult); }).Start();
+        }
+    }
+
+    static void HandleReceivedUdpDataTask(UdpReceiveResult udpReceiveResult){
+        var udpMessage = JsonSerializer.Deserialize<Message>(udpReceiveResult.Buffer);
+
+        if (udpMessage == default){
+            Console.WriteLine("Received Udp Message: Invalid, discarding.");
+            return;
+        }
+
+        string messageType = "";
+        if (udpMessage.messageName == "PositionMessage"){
+            var result = JsonSerializer.Deserialize<PositionMessage>(udpReceiveResult.Buffer);
+            foreach (var clientSlot in connectedClientDictionary){
+                if (result.id == clientSlot.Key){
+                    clientSlot.Value.player.position = result.position;
+                }
+            }
+
+            messageType = udpMessage.messageName;
+        }
+        else{
+            Console.WriteLine("Not assigned Udp Message Type");
+        }
+
+        Console.WriteLine($"Udp packaged: {messageType}");
+    }
 }
+
 
 internal class ClientSlot{
     public int id;
@@ -170,7 +237,7 @@ internal class ClientSlot{
 public class Player{
     public string name;
     public Color color;
-    public Vector3 position;
+    public Vector2 position;
     
     public float size = 3f; 
     public int score = 0;
