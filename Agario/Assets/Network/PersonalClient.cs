@@ -69,7 +69,7 @@ public class PersonalClient : MonoBehaviour{ //Using outdated Begin/End way to n
     
 
     public void SendConnectToServerData(){
-        var playerInfoMessage = new ConnectToServerMessage<string>(){
+        var playerInfoMessage = new ConnectToServerMessage(){
             messageName = "ConnectToServerMessage",
             name = this.playerInfo.name,
             color = this.playerInfo.color
