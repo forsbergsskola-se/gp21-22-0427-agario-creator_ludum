@@ -1,4 +1,8 @@
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Xml;
+using Newtonsoft.Json;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace AgarioServer;
 
@@ -30,9 +34,16 @@ internal class MessageHandler{
 
                 var message = new AllPlayerInfoMessage{
                     messageName = "AllPlayerInfoMessage",
-                    allPlayerDictionary = Server.connectedPlayerDictionary
+                    allPlayersInfoDictionary = Server.connectedPlayerDictionary
                 };
-                await SendMessageTask(message,clientSlot);
+
+                foreach (var playerInDictionary in message.allPlayersInfoDictionary){
+                    Console.WriteLine("In Dictionary: " + playerInDictionary.Value.name);
+                }
+                
+                
+                await SendMessageTask(message, clientSlot);
+                
                 break;
             }
             default:{
@@ -42,7 +53,19 @@ internal class MessageHandler{
                 
         }
     }
-    
+
+    // static async Task SendAllPlayerInfoMessage(ClientSlot clientSlot, AllPlayerInfoMessage message){ //Special case when sending dictionary
+    //     var stream = clientSlot.tcpClient.GetStream();
+    //     var streamWriter = new StreamWriter(stream);
+    //     streamWriter.AutoFlush = true;
+    //     var jsonOptions = new JsonSerializerOptions(){
+    //         IncludeFields = true
+    //     };
+    //     var messageSerialized = JsonConvert.SerializeObject(message.allPlayersInfoDictionary);
+    //     
+    //     await streamWriter.WriteLineAsync(JsonSerializer.Serialize(messageSerialized, jsonOptions));
+    // }
+
     static async Task SendMessageTask<T>(T message, ClientSlot clientSlot){
         var id = clientSlot.id;
         var address = clientSlot.tcpClient.Client.RemoteEndPoint;
@@ -52,7 +75,9 @@ internal class MessageHandler{
         var jsonOptions = new JsonSerializerOptions(){
             IncludeFields = true
         };
+        
         Console.WriteLine($"Awaiting to send {message} to: {address} ({id})...");
+        //var serializedMessage = JsonConvert.SerializeObject(message);
         await streamWriter.WriteLineAsync(JsonSerializer.Serialize(message,jsonOptions));
         Console.WriteLine($"Sent {message} to: {address} ({id}).");
         await streamWriter.FlushAsync();
@@ -110,8 +135,9 @@ internal class MessageHandler{
                 
                 Console.WriteLine("Name: "+clientSlot.playerInfo.name + " Id: " + clientSlot.playerInfo.id + " Score: " +clientSlot.playerInfo.score + " Size: " +clientSlot.playerInfo.size +
                               ("ColorR: " +clientSlot.playerInfo.colorR + " ColorG: " + clientSlot.playerInfo.colorG + " ColorB: "+clientSlot.playerInfo.colorB) + " PositionX: " +clientSlot.playerInfo.positionX + " PositionY: " +clientSlot.playerInfo.positionY);
-                Server.connectedPlayerDictionary[clientSlot.playerInfo.id] = clientSlot.playerInfo;
-                //Console.WriteLine($"Adding PlayerInfo from Client ({id}): {Server.connectedPlayerDictionary[clientSlot.playerInfo.id].name}");
+                //Server.connectedPlayerDictionary[clientSlot.playerInfo.id] = clientSlot.playerInfo;
+                Server.connectedPlayerDictionary.Add(clientSlot.playerInfo.id.ToString(),clientSlot.playerInfo);
+                Console.WriteLine($"Adding PlayerInfo from Client ({id}): {Server.connectedPlayerDictionary[clientSlot.playerInfo.id.ToString()].name}");
                 
                 PrepareThenSendMessage("AllPlayerInfoMessage",clientSlot);
                 break;

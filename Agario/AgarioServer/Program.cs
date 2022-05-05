@@ -14,7 +14,7 @@ public class Server{
     static UdpClient udpHost;
     static int maxClients = 10;
     static Dictionary<int, ClientSlot> connectedClientDictionary;
-   public static Dictionary<int, PlayerInfo> connectedPlayerDictionary;
+   public static Dictionary<string, PlayerInfo> connectedPlayerDictionary;
 
     public static Action<int> clearDataEvent;
     
@@ -34,7 +34,7 @@ public class Server{
         udpHost = new UdpClient(hostEndpoint);
         
         connectedClientDictionary = new Dictionary<int, ClientSlot>(maxClients);
-        connectedPlayerDictionary = new Dictionary<int, PlayerInfo>(maxClients);
+        connectedPlayerDictionary = new Dictionary<string, PlayerInfo>(maxClients);
 
         CreateEmptyClientSlots();
 

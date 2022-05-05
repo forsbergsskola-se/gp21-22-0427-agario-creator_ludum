@@ -1,6 +1,3 @@
-using System.Drawing;
-using System.Numerics;
-
 namespace AgarioServer;
 
 public class Message{
@@ -34,5 +31,5 @@ public class InitialServerToClientMessage : PositionMessage{
 }
 
 [Serializable] public class AllPlayerInfoMessage : Message{
-    public Dictionary<int, PlayerInfo> allPlayerDictionary;
+    public Dictionary<string, PlayerInfo> allPlayersInfoDictionary;
 }

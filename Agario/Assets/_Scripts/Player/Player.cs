@@ -6,7 +6,7 @@ using Color = System.Drawing.Color;
 
 public class Player : MonoBehaviour{
     public PlayerInfo playerInfo = new();
-    public Dictionary<int, PlayerInfo> playerDictionary;
+    public Dictionary<string, PlayerInfo> playerDictionary;
 }
 [Serializable]public class PlayerInfo{
          public int id;

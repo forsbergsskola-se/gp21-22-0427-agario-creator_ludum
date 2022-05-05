@@ -9,7 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 479778337907763218}
-  - component: {fileID: 479778337907763219}
+  - component: {fileID: 5361150211592959849}
+  - component: {fileID: 4532678637651250740}
+  - component: {fileID: 4659651278586971874}
   m_Layer: 0
   m_Name: PlayerClient
   m_TagString: Untagged
@@ -32,7 +34,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &479778337907763219
+--- !u!114 &5361150211592959849
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,7 +43,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 479778337907763216}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d35598ad36c003c43994d6fc84b6e440, type: 3}
+  m_Script: {fileID: 11500000, guid: aa518df57689b154ea11f711e5386f83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newPlayerDataReadyToSendSo: {fileID: 11400000, guid: 67a9a082f1d0e5248add8bc0cf031a00, type: 2}
+  playerInfo:
+    id: 0
+    score: 0
+    name: TestName
+    colorR: 0
+    colorG: 0
+    colorB: 0
+    size: 0
+    positionX: 0
+    positionY: 0
+--- !u!114 &4532678637651250740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 479778337907763216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 27bdad7faad94fd29cb1776e1180b9df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &4659651278586971874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 479778337907763216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5fbca188af6be0d47ad023e19b6a110e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mapSizeSo: {fileID: 11400000, guid: 9018255e54ce94940813372bd8d9a175, type: 2}
+  player: {fileID: 5361150211592959849}

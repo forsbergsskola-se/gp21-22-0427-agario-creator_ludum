@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Vector2 = System.Numerics.Vector2;
@@ -23,12 +24,12 @@ namespace Network{
         public float mapSizeX;
         public float mapSizeY;
     }
-    public class PlayerInfoMessage : Message{
+    [Serializable]public class PlayerInfoMessage : Message{
         public PlayerInfo playerInfo;
     }
     
-    public class AllPlayerInfoMessage : Message{
-        public Dictionary<int, PlayerInfo> allPlayersInfoDictionary;
+    [Serializable] public class AllPlayerInfoMessage : Message{
+        public Dictionary<string, PlayerInfo> allPlayersInfoDictionary;
     }
  
 }

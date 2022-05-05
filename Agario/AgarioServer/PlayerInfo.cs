@@ -3,7 +3,7 @@ using System.Drawing;
 namespace AgarioServer;
 
 
-public class PlayerInfo{
+[Serializable]public class PlayerInfo{
     public int id;
     public int score;
     
