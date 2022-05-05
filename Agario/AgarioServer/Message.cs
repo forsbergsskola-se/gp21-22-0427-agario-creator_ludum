@@ -11,10 +11,10 @@ public class Message<T> : Message{
     public T value;
 }
 
-public class ConnectToServerMessage : Message{
-    public string name;
-    public Color color;
-}
+// public class ConnectToServerMessage : Message{
+//     public string name;
+//     public Color color;
+// }
 
 public class PositionMessage : Message{
     public int id;
@@ -23,9 +23,16 @@ public class PositionMessage : Message{
 }
 
 public class InitialServerToClientMessage : PositionMessage{
-    public Dictionary<int, PlayerInfo> playerDictionary;
-    public float size = 3f; 
-    public int score = 0;
-    public float mapSizeX = 300f;
-    public float mapSizeY = 300f;
+    public int score;
+    public float size;
+    public float mapSizeX;
+    public float mapSizeY;
+}
+
+public class PlayerInfoMessage : Message{
+    public PlayerInfo playerInfo;
+}
+
+public class AllPlayerInfoMessage : Message{
+    public Dictionary<int, PlayerInfo> allPlayerDictionary;
 }

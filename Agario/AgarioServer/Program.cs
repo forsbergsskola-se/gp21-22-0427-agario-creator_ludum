@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Numerics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using AgarioServer;
@@ -13,7 +14,7 @@ public class Server{
     static UdpClient udpHost;
     static int maxClients = 10;
     static Dictionary<int, ClientSlot> connectedClientDictionary;
-    static Dictionary<int, PlayerInfo> connectedPlayerDictionary;
+   public static Dictionary<int, PlayerInfo> connectedPlayerDictionary;
 
     public static Action<int> clearDataEvent;
     
@@ -24,10 +25,8 @@ public class Server{
         //Begins the connection process, but creates a new thread which deals with finishing it.
         Console.WriteLine("Starting task to listen for new tcp Clients");
         ListenForTcpClientsTask();
-        ReceiveUdpDataTask();
+       // ReceiveUdpDataTask();
         Console.Read();
-        
-        
     }
 
     static void ServerSetUp(){
@@ -48,6 +47,7 @@ public class Server{
     static void CreateEmptyClientSlots(){
         for (int i = 1; i <= maxClients; i++){
             connectedClientDictionary.Add(i, new ClientSlot(0, null));
+            //connectedPlayerDictionary.Add(i, new PlayerInfo());
         }
     }
 
@@ -57,20 +57,17 @@ public class Server{
             var tcpClient = await hostListener.AcceptTcpClientAsync();
             
             Console.WriteLine($"New Client accepted.");
-            var activatedClientSlot = TryAssignClientToDictionary(tcpClient);
-
-            new Task(()=> ReadFromStreamTask(activatedClientSlot).Start()).Start();
-            new Task(() => SendTcpDataTask(activatedClientSlot).Start()).Start();
+            var activatedClientSlot = await TryAssignClientToDictionary(tcpClient);
+            new Task(()=> MessageHandler.PrepareThenSendMessage("InitialServerToClientMessage", activatedClientSlot).Start()).Start();
+            new Task(()=> MessageHandler.StartReceivingMessagesTask(activatedClientSlot).Start()).Start();
         }
     }
 
-    static ClientSlot TryAssignClientToDictionary(TcpClient tcpClient){
+    static async Task<ClientSlot>  TryAssignClientToDictionary(TcpClient tcpClient){
         for (int i = 1; i <= connectedClientDictionary.Count; i++){
             if (connectedClientDictionary[i].id == default){
                 connectedClientDictionary[i] = new ClientSlot(i, tcpClient);
                 Console.WriteLine($"New Client: ({tcpClient.Client.RemoteEndPoint}, Id: ({i}).");
-
-                connectedPlayerDictionary[i] = connectedClientDictionary[i].playerInfo;
                 
                 return connectedClientDictionary[i];
             }
@@ -82,85 +79,8 @@ public class Server{
         return null;
     }
 
-    static async Task ReadFromStreamTask(ClientSlot clientSlot){
-        var tcpClient = clientSlot.tcpClient.Client;
-        var id = clientSlot.id;
-        var address = clientSlot.tcpClient.Client.RemoteEndPoint;
-        var stream = clientSlot.tcpClient.GetStream();
-        var streamReader = new StreamReader(stream);
-        var streamWriter = new StreamWriter(stream);
-        streamWriter.AutoFlush = true;
-        var jsonOptions = new JsonSerializerOptions(){
-            IncludeFields = true
-        };
-
-        while (tcpClient.Connected){
-
-            Console.WriteLine($"Listening for data stream from {address} ({id}).");
-            var jsonString = await streamReader.ReadLineAsync();
-            
-            if (jsonString == default){
-                //No data received
-                Console.WriteLine($"Data stream from {address} ({id}) was empty, discarding.");
-                
-                //Disconnecting Client
-                clientSlot.ClearAllData(id);
-                
-                continue;
-            }
-
-            Console.WriteLine($"Received data from {address} ({id})");
-
-            Console.WriteLine("Deseralizing data...");
-            var message = JsonSerializer.Deserialize<Message>(jsonString, jsonOptions);
-            Console.WriteLine($"Data Deseralized, Type: {message.messageName}");
-            if (message.messageName == "ConnectToServerMessage"){
-                var playerConnectToServerData = JsonSerializer.Deserialize<ConnectToServerMessage>(jsonString, jsonOptions);
-                Console.WriteLine($"Received data of type ({message.messageName}) from {address} ({id})");
-                clientSlot.playerInfo.name = playerConnectToServerData.name;
-                Console.WriteLine($"Name: {playerConnectToServerData.name} ({id})");
-                clientSlot.playerInfo.color = playerConnectToServerData.color;
-                Console.WriteLine($"Color: {playerConnectToServerData.color} ({id})");
-            }
-            else{
-                Console.WriteLine("Faulty Tcp Message name");
-            }
-
-        }
-    }
-
-    static async Task SendTcpDataTask(ClientSlot clientSlot){
-        await SendInitialTcpConnectionData(clientSlot);
-        //TODO: Update data
-    }
-
-    static async Task SendInitialTcpConnectionData(ClientSlot clientSlot){
-        var id = clientSlot.id;
-        var address = clientSlot.tcpClient.Client.RemoteEndPoint;
-        var stream = clientSlot.tcpClient.GetStream();
-        var streamWriter = new StreamWriter(stream);
-        streamWriter.AutoFlush = true;
-        var jsonOptions = new JsonSerializerOptions(){
-            IncludeFields = true
-        };
-
-        InitialServerToClientMessage message = new (){
-            messageName = "InitialServerToClientMessage",
-            id = clientSlot.id,
-            playerDictionary = connectedPlayerDictionary,
-            positionX = 5f,
-            positionY = 5f,
-            mapSizeX = 300f,
-            mapSizeY = 300f
-        };
-        
-        Console.WriteLine($"Awaiting to send {message.messageName} to: {address} ({id})...");
-        await streamWriter.WriteLineAsync(JsonSerializer.Serialize(message,jsonOptions));
-        Console.WriteLine($"Sent {message.messageName} to: {address} ({id}).");
-
-    }
-
     static async Task ReceiveUdpDataTask(){
+        throw new InvalidOleVariantTypeException();
         while (true){
             Console.WriteLine("Awaiting Udp Package...");
             var udpReceiveResult = await udpHost.ReceiveAsync();
@@ -170,6 +90,7 @@ public class Server{
     }
 
     static void HandleReceivedUdpDataTask(UdpReceiveResult udpReceiveResult){
+        throw new InvalidOleVariantTypeException();
         var udpMessage = JsonSerializer.Deserialize<Message>(udpReceiveResult.Buffer);
 
         if (udpMessage == default){
@@ -196,4 +117,3 @@ public class Server{
         Console.WriteLine($"Udp packaged: {messageType}");
     }
 }
-

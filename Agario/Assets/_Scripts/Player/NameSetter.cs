@@ -6,10 +6,13 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class NameSetter : MonoBehaviour{
-    [SerializeField] PlayerInfo playerInfo;
+    [SerializeField] Player player;
+    
+    PlayerInfo playerInfo;
     TMP_InputField nameInputField;
     
     void Start(){
+        playerInfo = player.playerInfo;
         nameInputField = GetComponent<TMP_InputField>();
         nameInputField.onValueChanged.AddListener(SetPlayerName);
     }

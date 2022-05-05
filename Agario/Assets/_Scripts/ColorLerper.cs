@@ -8,36 +8,42 @@ public class ColorLerper : MonoBehaviour{
     [SerializeField] Slider redSlider;
     [SerializeField] Slider greenSlider;
     [SerializeField] Slider blueSlider;
-    [SerializeField] PlayerInfo playerInfo;
+    [SerializeField] Player player;
+    PlayerInfo playerInfo;
+    
    
     Image displayPlayer;
 
   
 
     void Start(){
+        playerInfo = player.playerInfo;
         displayPlayer = GetComponent<Image>();
         redSlider.onValueChanged.AddListener(ChangeRedColor);
         greenSlider.onValueChanged.AddListener(ChangeGreenColor);
         blueSlider.onValueChanged.AddListener(ChangeBlueColor);
        
-        SetPlayerColor(displayPlayer.color);
+        playerInfo.colorR = (int) (displayPlayer.color.r*255);
+        // Debug.Log("Red: "+playerInfo.colorR);
+        playerInfo.colorR = (int) (displayPlayer.color.g*255);
+        playerInfo.colorR = (int) (displayPlayer.color.b*255);
     }
-
-    void SetPlayerColor(Color _color){
-        playerInfo.color = _color;
-    }
+    
 
     void ChangeRedColor(float _value){
         displayPlayer.color = new Color(_value, displayPlayer.color.g, displayPlayer.color.b);
-        SetPlayerColor(displayPlayer.color);
+        // Debug.Log("Red: "+playerInfo.colorR);
+        playerInfo.colorR = (int) (_value * 255);
     }
   
     void ChangeGreenColor(float _value){
         displayPlayer.color = new Color(displayPlayer.color.r, _value, displayPlayer.color.b);
-        SetPlayerColor(displayPlayer.color);
+        // Debug.Log("Green: "+playerInfo.colorG);
+        playerInfo.colorG = (int) (_value * 255);
     } 
     void ChangeBlueColor(float _value){
         displayPlayer.color = new Color(displayPlayer.color.r, displayPlayer.color.g, _value);
-        SetPlayerColor(displayPlayer.color);
+        // Debug.Log("Blue: "+playerInfo.colorB);
+        playerInfo.colorB = (int) (_value * 255);
     }
 }
