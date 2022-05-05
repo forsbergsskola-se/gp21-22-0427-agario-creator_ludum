@@ -331,6 +331,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInfo: {fileID: 89828572}
+  mapSizeSo: {fileID: 0}
 --- !u!114 &89828572
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1088,6 +1089,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerInfo: {fileID: 617670699}
+  mapSizeSo: {fileID: 11400000, guid: 9018255e54ce94940813372bd8d9a175, type: 2}
 --- !u!114 &617670699
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1275,7 +1277,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &796735378
 RectTransform:
   m_ObjectHideFlags: 0

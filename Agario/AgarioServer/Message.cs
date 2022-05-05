@@ -18,11 +18,14 @@ public class ConnectToServerMessage : Message{
 
 public class PositionMessage : Message{
     public int id;
-    public Vector2 position;
+    public float positionX;
+    public float positionY;
 }
 
 public class InitialServerToClientMessage : PositionMessage{
-    public Dictionary<int, Player> playerDictionary;
+    public Dictionary<int, PlayerInfo> playerDictionary;
     public float size = 3f; 
     public int score = 0;
+    public float mapSizeX = 300f;
+    public float mapSizeY = 300f;
 }

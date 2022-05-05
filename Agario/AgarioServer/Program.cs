@@ -13,7 +13,7 @@ public class Server{
     static UdpClient udpHost;
     static int maxClients = 10;
     static Dictionary<int, ClientSlot> connectedClientDictionary;
-    static Dictionary<int, Player> connectedPlayerDictionary;
+    static Dictionary<int, PlayerInfo> connectedPlayerDictionary;
 
     public static Action<int> clearDataEvent;
     
@@ -35,7 +35,7 @@ public class Server{
         udpHost = new UdpClient(hostEndpoint);
         
         connectedClientDictionary = new Dictionary<int, ClientSlot>(maxClients);
-        connectedPlayerDictionary = new Dictionary<int, Player>(maxClients);
+        connectedPlayerDictionary = new Dictionary<int, PlayerInfo>(maxClients);
 
         CreateEmptyClientSlots();
 
@@ -70,7 +70,7 @@ public class Server{
                 connectedClientDictionary[i] = new ClientSlot(i, tcpClient);
                 Console.WriteLine($"New Client: ({tcpClient.Client.RemoteEndPoint}, Id: ({i}).");
 
-                connectedPlayerDictionary[i] = connectedClientDictionary[i].player;
+                connectedPlayerDictionary[i] = connectedClientDictionary[i].playerInfo;
                 
                 return connectedClientDictionary[i];
             }
@@ -117,9 +117,9 @@ public class Server{
             if (message.messageName == "ConnectToServerMessage"){
                 var playerConnectToServerData = JsonSerializer.Deserialize<ConnectToServerMessage>(jsonString, jsonOptions);
                 Console.WriteLine($"Received data of type ({message.messageName}) from {address} ({id})");
-                clientSlot.player.name = playerConnectToServerData.name;
+                clientSlot.playerInfo.name = playerConnectToServerData.name;
                 Console.WriteLine($"Name: {playerConnectToServerData.name} ({id})");
-                clientSlot.player.color = playerConnectToServerData.color;
+                clientSlot.playerInfo.color = playerConnectToServerData.color;
                 Console.WriteLine($"Color: {playerConnectToServerData.color} ({id})");
             }
             else{
@@ -148,9 +148,12 @@ public class Server{
             messageName = "InitialServerToClientMessage",
             id = clientSlot.id,
             playerDictionary = connectedPlayerDictionary,
-            position = new Vector2(5, 5) //TODO: GetRandomPosition();
+            positionX = 5f,
+            positionY = 5f,
+            mapSizeX = 300f,
+            mapSizeY = 300f
         };
-
+        
         Console.WriteLine($"Awaiting to send {message.messageName} to: {address} ({id})...");
         await streamWriter.WriteLineAsync(JsonSerializer.Serialize(message,jsonOptions));
         Console.WriteLine($"Sent {message.messageName} to: {address} ({id}).");
@@ -179,7 +182,8 @@ public class Server{
             var result = JsonSerializer.Deserialize<PositionMessage>(udpReceiveResult.Buffer);
             foreach (var clientSlot in connectedClientDictionary){
                 if (result.id == clientSlot.Key){
-                    clientSlot.Value.player.position = result.position;
+                    clientSlot.Value.playerInfo.positionX = result.positionX;
+                    clientSlot.Value.playerInfo.positionY = result.positionY;
                 }
             }
 
@@ -193,58 +197,3 @@ public class Server{
     }
 }
 
-
-internal class ClientSlot{
-    public int id;
-    public TcpClient tcpClient;
-    public Player player;
-    public int bufferSize = 4000;
-    public byte[] buffer;//4kb
-    
-    public ClientSlot(int _id, TcpClient _tcpClient){
-        id = _id;
-        tcpClient = _tcpClient;
-
-
-        Server.clearDataEvent +=  ClearAllData;
-        buffer = new byte[bufferSize];
-        player = new Player();
-    }
-
-    public void ClearAllData(int _id){
-        if (id != _id){
-            return;
-        }
-        
-        Console.WriteLine($"Disconnecting client ({id})...");
-        tcpClient.Client.Disconnect(true);
-        Console.WriteLine($"Client ({id}) disconnected.");
-        
-        Console.WriteLine($"Clearing data for client ({id})...");
-        id = 0;
-        tcpClient.GetStream().Close();
-        tcpClient.GetStream().Dispose();
-        tcpClient.Client.Close();
-        tcpClient.Client.Dispose();
-        tcpClient.Close();
-        tcpClient.Dispose();
-        tcpClient = default;
-        GC.Collect();
-        Console.WriteLine($"Data for client ({id}) has been cleared.");
-    }
-
-
-    
-
-}
-public class Player{
-    public string name;
-    public Color color;
-    public Vector2 position;
-    
-    public float size = 3f; 
-    public int score = 0;
-    
-
-    
-}

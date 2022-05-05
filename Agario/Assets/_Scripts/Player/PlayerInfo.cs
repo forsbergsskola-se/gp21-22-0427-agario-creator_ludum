@@ -4,17 +4,14 @@ using UnityEngine;
 
 public class PlayerInfo : MonoBehaviour{
    public int id;
-   public string name;
-   public Color color;
    public int score;
+    
+   public string name;
+    
+   public Color color;
+   public Dictionary<int, PlayerInfo> playerDictionary;
+    
    public float size;
-
-   Vector2 _position;
-   public Vector2 Position{
-      get => _position;
-      set{
-         _position = value;
-         transform.position = _position;
-      }
-   }
+   public float positionX;
+   public float positionY;
 }

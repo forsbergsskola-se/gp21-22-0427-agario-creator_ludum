@@ -1,15 +1,10 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Vector2 = System.Numerics.Vector2;
 
 public class Message{
  public string messageName;
 }
-
-// public class Message<T> : Message{
-//  public T value;
-// }
-
 public class ConnectToServerMessage : Message{
  public string name;
  public Color color;
@@ -17,11 +12,15 @@ public class ConnectToServerMessage : Message{
 
 public class PositionMessage : Message{
  public int id;
- public Vector2 position;
+ public float positionX;
+ public float positionY;
 }
 
 public class InitialServerToClientMessage : PositionMessage{
- public Dictionary<int, Player> playerDictionary;
+ public Dictionary<int, PlayerInfo> playerDictionary;
  public float size; 
  public int score;
+ 
+ public float mapSizeX;
+ public float mapSizeY;
 }
