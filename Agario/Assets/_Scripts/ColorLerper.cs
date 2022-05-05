@@ -25,8 +25,8 @@ public class ColorLerper : MonoBehaviour{
        
         playerInfo.colorR = (int) (displayPlayer.color.r*255);
         // Debug.Log("Red: "+playerInfo.colorR);
-        playerInfo.colorR = (int) (displayPlayer.color.g*255);
-        playerInfo.colorR = (int) (displayPlayer.color.b*255);
+        playerInfo.colorG = (int) (displayPlayer.color.g*255);
+        playerInfo.colorB = (int) (displayPlayer.color.b*255);
     }
     
 

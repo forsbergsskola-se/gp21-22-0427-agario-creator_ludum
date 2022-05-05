@@ -8,7 +8,7 @@ public class Player : MonoBehaviour{
     public PlayerInfo playerInfo = new();
     public Dictionary<int, PlayerInfo> playerDictionary;
 }
-public class PlayerInfo{
+[Serializable]public class PlayerInfo{
          public int id;
          public int score;
      

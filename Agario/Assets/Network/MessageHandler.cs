@@ -23,7 +23,9 @@ namespace Network{
                     var message = new PlayerInfoMessage(){
                         messageName = "PlayerInfoMessage",
                         playerInfo = player.playerInfo
+                        
                     };
+                    Debug.Log(message.playerInfo.name);
                     await SendMessageTask(message);
                     break;
                 }
@@ -80,7 +82,8 @@ namespace Network{
                     
                     //TODO: Remove Debug log
                     foreach (var dictionaryPlayer in  player.playerDictionary){
-                        Console.WriteLine($"Player: {dictionaryPlayer.Value.name} ({dictionaryPlayer.Key})");
+                        Debug.Log("HIHIHI");
+                        Debug.Log($"Player: {dictionaryPlayer.Value.name} ({dictionaryPlayer.Key})");
                     }
                     
                     break;

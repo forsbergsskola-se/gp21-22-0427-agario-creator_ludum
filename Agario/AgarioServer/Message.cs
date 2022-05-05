@@ -29,10 +29,10 @@ public class InitialServerToClientMessage : PositionMessage{
     public float mapSizeY;
 }
 
-public class PlayerInfoMessage : Message{
+[Serializable] public class PlayerInfoMessage : Message{
     public PlayerInfo playerInfo;
 }
 
-public class AllPlayerInfoMessage : Message{
+[Serializable] public class AllPlayerInfoMessage : Message{
     public Dictionary<int, PlayerInfo> allPlayerDictionary;
 }

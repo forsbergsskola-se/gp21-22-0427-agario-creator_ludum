@@ -105,14 +105,13 @@ internal class MessageHandler{
             case "PlayerInfoMessage":{
                 var message = JsonSerializer.Deserialize<PlayerInfoMessage>(_jsonString,jsonOptions);
                 
-                clientSlot.playerInfo = message.playerInfo; // ITS null...
-                Console.WriteLine(message.playerInfo);
+                clientSlot.playerInfo = message.playerInfo;
                 Console.WriteLine($"Adding PlayerInfo from Client ({id})...");
-                //TODO: FIX BUG
-                Console.Write("Name: "+clientSlot.playerInfo.name, "Id: " + clientSlot.playerInfo.id + "Score: " +clientSlot.playerInfo.score + "Size: " +clientSlot.playerInfo.size +
-                              ("ColorR: " +clientSlot.playerInfo.colorR + "ColorG: " + clientSlot.playerInfo.colorG + "ColorB: "+clientSlot.playerInfo.colorB) + "PositionX: " +clientSlot.playerInfo.positionX + "PositionY: " +clientSlot.playerInfo.positionY);
+                
+                Console.WriteLine("Name: "+clientSlot.playerInfo.name + " Id: " + clientSlot.playerInfo.id + " Score: " +clientSlot.playerInfo.score + " Size: " +clientSlot.playerInfo.size +
+                              ("ColorR: " +clientSlot.playerInfo.colorR + " ColorG: " + clientSlot.playerInfo.colorG + " ColorB: "+clientSlot.playerInfo.colorB) + " PositionX: " +clientSlot.playerInfo.positionX + " PositionY: " +clientSlot.playerInfo.positionY);
                 Server.connectedPlayerDictionary[clientSlot.playerInfo.id] = clientSlot.playerInfo;
-                Console.WriteLine($"Adding PlayerInfo from Client ({id}): {Server.connectedPlayerDictionary[clientSlot.playerInfo.id].name}");
+                //Console.WriteLine($"Adding PlayerInfo from Client ({id}): {Server.connectedPlayerDictionary[clientSlot.playerInfo.id].name}");
                 
                 PrepareThenSendMessage("AllPlayerInfoMessage",clientSlot);
                 break;
