@@ -14,7 +14,7 @@ internal class ClientSlot{
 
         Server.clearDataEvent +=  ClearAllData;
         buffer = new byte[bufferSize];
-        playerInfo = new PlayerInfo();
+        playerInfo = new PlayerInfo(id);
     }
 
     public void ClearAllData(int _id){

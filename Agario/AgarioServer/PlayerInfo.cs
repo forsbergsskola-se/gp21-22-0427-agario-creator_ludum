@@ -15,4 +15,8 @@ public class PlayerInfo{
     public float size;
     public float positionX;
     public float positionY;
+
+    public PlayerInfo(int _id){
+        id = _id;
+    }
 }
