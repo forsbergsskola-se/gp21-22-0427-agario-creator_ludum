@@ -8,24 +8,36 @@ using UnityEngine.SceneManagement;
 
 
 public class SceneChanger : MonoBehaviour{
+    [SerializeField] UnityEventSO playerReadyEventSo;
     [SerializeField] SceneAsset menuScene;
     [SerializeField] SceneAsset loadingScene;
     [SerializeField] SceneAsset gameScene;
 
     void Awake(){
-        DontDestroyOnLoad(this);
+        DontDestroyOnLoad(gameObject);
+    }
+
+    void Start(){
+       // playerReadyEventSo.unityEventSo.AddListener(LoadGameScene);
     }
 
     public void LoadMenuScene(){
-        SceneManager.LoadScene(menuScene.name);
+        SceneManager.LoadScene(menuScene.name,LoadSceneMode.Additive);
     }
     public void LoadLoadingScreen(){
         SceneManager.LoadScene(loadingScene.name);
-        //SceneManager.MergeScenes( SceneManager.GetSceneByName(loadingScene.name), SceneManager.GetSceneByBuildIndex(2));
     }
 
     public void LoadGameScene(){
-        SceneManager.LoadScene(gameScene.name);
+        Debug.Log("Loading gameScene... ");
+        SceneManager.LoadScene(gameScene.name,LoadSceneMode.Additive);
+        Debug.Log("Finished loading gameScene. ");
+    }
+
+    public async Task LoadGameSceneAsync(){
+        Debug.Log("Loading gameScene... ");
+       SceneManager.LoadScene(gameScene.name,LoadSceneMode.Single);
+        Debug.Log("Finished loading gameScene. ");
     }
 
 

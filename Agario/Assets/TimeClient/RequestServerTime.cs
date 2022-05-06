@@ -8,7 +8,7 @@ using UnityEngine;
 
 public class RequestServerTime : MonoBehaviour{
 
-    [SerializeField] UnityEventSO messageSenderEventSo;
+    [SerializeField] StringUnityEventSO messageSenderEventSo;
     
     public void SendsRequest(){
         SendRequestAsync();
@@ -26,7 +26,7 @@ public class RequestServerTime : MonoBehaviour{
             
         byte[] buffer = new byte[100];
         tcpClient.GetStream().Read(buffer,0, 100);
-        messageSenderEventSo.unityEventSo.Invoke(Encoding.ASCII.GetString(buffer));
+        messageSenderEventSo.stringUnityEventSo.Invoke(Encoding.ASCII.GetString(buffer));
         Debug.Log(Encoding.ASCII.GetString(buffer));
         tcpClient.GetStream().Close();
         Debug.Log("Stream Closed");

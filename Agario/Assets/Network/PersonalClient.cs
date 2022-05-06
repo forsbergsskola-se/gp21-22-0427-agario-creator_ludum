@@ -20,16 +20,16 @@ namespace Network{
 
         PlayerInfo playerInfo;
         MessageHandler messageHandler;
-        static IPEndPoint serverEndPoint = new IPEndPoint(IPAddress.Loopback, 9000);
+        static IPEndPoint serverEndPoint;
 
 
-        TcpClient tcpClient = new TcpClient();
+        TcpClient tcpClient;
         internal StreamReader streamReader;
         internal StreamWriter streamWriter;
         NetworkStream stream;
 
-        string nameCriteria = ",.;:0123456789 ";
-        const int maxNameLenght = 15;
+        string nameCriteria;
+         int maxNameLenght;
 
         bool _isConnected;
 
@@ -39,14 +39,22 @@ namespace Network{
                 _isConnected = value;
                 if (IsConnected){
                     Console.WriteLine("Is Connected: "+IsConnected);
-                    // new Task(() => messageHandler.ListenForMessageAsync().Start()).Start();
+                    new Task(() => messageHandler.ListenForMessageAsync().Start()).Start();
                 }
             }
         }
 
+        void Awake(){
+            DontDestroyOnLoad(gameObject);
+            messageHandler = GetComponent<MessageHandler>();
+        }
+
         void Start(){
             playerInfo = player.playerInfo;
-            messageHandler = GetComponent<MessageHandler>();
+            serverEndPoint = new IPEndPoint(IPAddress.Loopback, 9000);
+            nameCriteria = ",.;:0123456789 ";
+            maxNameLenght = 15;
+            tcpClient = new TcpClient();
         }
 
         public void Connect(){
@@ -71,16 +79,16 @@ namespace Network{
             streamWriter = new StreamWriter(stream);
             streamWriter.AutoFlush = true;
             IsConnected = true; // Calls SendConnectToServerData
-            new Task(() => messageHandler.ListenForMessageAsync().Start()).Start();
         }
         
 
         bool IsValidNameCheck(String _name){
-            return (_name.Length is > 0 and <= maxNameLenght && !(_name.Split(nameCriteria.ToCharArray()).Length > 1));
+            return (_name.Length  > 0 && _name.Length <= maxNameLenght && !(_name.Split(nameCriteria.ToCharArray()).Length > 1));
         }
         
         void OnApplicationQuit(){
             if (tcpClient != null){
+                _isConnected = false;
                 stream.Close();
                 stream.Dispose();
                 tcpClient.Client.Close();

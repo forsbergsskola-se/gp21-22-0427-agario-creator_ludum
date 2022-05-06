@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public class ChangeText : MonoBehaviour{
-    [SerializeField] UnityEventSO updateEventSo;
+    [SerializeField] StringUnityEventSO updateEventSo;
     TextMeshProUGUI textMeshProUGUI;
 
     void Awake(){
@@ -14,11 +14,11 @@ public class ChangeText : MonoBehaviour{
     }
 
     void OnEnable(){
-        updateEventSo.unityEventSo.AddListener(UpdateText);
+        updateEventSo.stringUnityEventSo.AddListener(UpdateText);
     }
 
     void OnDisable(){
-        updateEventSo.unityEventSo.RemoveListener(UpdateText);
+        updateEventSo.stringUnityEventSo.RemoveListener(UpdateText);
     }
 
     void UpdateText(string text){

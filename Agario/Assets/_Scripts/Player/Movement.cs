@@ -6,22 +6,29 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour{
    [SerializeField] PlayerSO playerSo;
-   [SerializeField] GameObject map;
+   [SerializeField] Vector2SO mapSizeVector2;
+   [SerializeField] UnityEventSO playerReadyEventSo;
    float speed;
    Camera camera;
-
    Vector2 mousePosition;
 
+   bool enabled;
+
    void Awake(){
-      camera = Camera.main;
+      
    }
 
    void Start(){
       speed = playerSo.baseMovementSpeed;
+     // playerReadyEventSo.unityEventSo.AddListener(SetScriptActive);
    }
 
    void Update(){
 
+      if (!enabled){
+         return;
+      }
+      
       EnsureStayingOnMap();
      
       if (Input.GetMouseButton(0)){
@@ -41,9 +48,9 @@ public class Movement : MonoBehaviour{
       var positionX = position.x;
       var positionY = position.y;
       
-      var mapScale = map.transform.localScale;
-      var boundaryX = mapScale.x/2;
-      var boundaryY = mapScale.y/2;
+     
+      var boundaryX = mapSizeVector2.vector2.x/2;
+      var boundaryY = mapSizeVector2.vector2.y/2;
       if (positionX >= boundaryX){
          positionX -= 5f;
       }
@@ -59,4 +66,11 @@ public class Movement : MonoBehaviour{
 
       transform.position = new Vector2(positionX, positionY);
    }
+
+   void SetScriptActive(){
+      Debug.Log("Enabling Movement");
+      camera = Camera.main;
+      enabled = true;
+   }
+   
 }

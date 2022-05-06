@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace Network{
     public class MessageHandler : MonoBehaviour{
+        [SerializeField] UnityEventSO playerReadyEventSo;
         Player player;
         PersonalClient personalClient;
         PlayerInfo playerInfo;
@@ -106,9 +107,7 @@ namespace Network{
                     if (message == null){
                         throw new ArgumentNullException();
                     }
-                    // Console.WriteLine("Message Array (1) name: "+ message.allPlayersInfoArray[1].name);
-                    //player.allActivePlayersArray = message.allPlayersInfoArray;
-
+                    
                     player.allActivePlayersArray = new PlayerInfo[message.allPlayersInfoArray.Length];
                     player.allActivePlayersArray = message.allPlayersInfoArray;
 
@@ -120,12 +119,9 @@ namespace Network{
                         Debug.Log("Active Player: "+playerInfomercial.name + $"({playerInfomercial.id})");
                     }
                     
-                    for (int i = 1; i <= message.allPlayersInfoArray.Length; i++){
-
-                        player.allActivePlayersArray[i] = message.allPlayersInfoArray[i];
-                        Console.WriteLine( player.allActivePlayersArray[i].name);
-                    }
-
+                    Debug.Log("Invoking Player Ready Event");
+                    playerReadyEventSo.unityEventSo.Invoke(); //Tells everyone who needs to know that the player is ready
+                    
                     break;
                 }
                 case "PositionMessage":{
