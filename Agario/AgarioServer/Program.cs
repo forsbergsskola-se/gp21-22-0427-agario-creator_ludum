@@ -12,9 +12,10 @@ public class Server{
     static readonly IPEndPoint hostEndpoint = new IPEndPoint(IPAddress.Any, port);
     static TcpListener hostListener;
     static UdpClient udpHost;
-    static int maxClients = 10;
+    static int maxClients = 11;
     static Dictionary<int, ClientSlot> connectedClientDictionary;
-   public static Dictionary<string, PlayerInfo> connectedPlayerDictionary;
+   //public static PlayerInfo[] connectedPlayerArray;
+   public static PlayerInfo[] connectedPlayerDictionary;
 
     public static Action<int> clearDataEvent;
     
@@ -34,8 +35,7 @@ public class Server{
         udpHost = new UdpClient(hostEndpoint);
         
         connectedClientDictionary = new Dictionary<int, ClientSlot>(maxClients);
-        connectedPlayerDictionary = new Dictionary<string, PlayerInfo>(maxClients);
-
+        connectedPlayerDictionary = new PlayerInfo[maxClients];
         CreateEmptyClientSlots();
 
         Console.WriteLine($"Starting server...");
@@ -47,7 +47,6 @@ public class Server{
     static void CreateEmptyClientSlots(){
         for (int i = 1; i <= maxClients; i++){
             connectedClientDictionary.Add(i, new ClientSlot(0, null));
-            //connectedPlayerDictionary.Add(i, new PlayerInfo());
         }
     }
 
@@ -64,9 +63,9 @@ public class Server{
     }
 
     static async Task<ClientSlot>  TryAssignClientToDictionary(TcpClient tcpClient){
-        for (int i = 1; i <= connectedClientDictionary.Count; i++){
+        for (int i = 1; i < connectedClientDictionary.Count; i++){
             if (connectedClientDictionary[i].id == default){
-                connectedClientDictionary[i] = new ClientSlot(i, tcpClient);
+                connectedClientDictionary[i] = new ClientSlot(i, tcpClient); //TODO: Adding one here
                 Console.WriteLine($"New Client: ({tcpClient.Client.RemoteEndPoint}, Id: ({i}).");
                 
                 return connectedClientDictionary[i];

@@ -4,16 +4,13 @@ internal class ClientSlot{
     public int id;
     public TcpClient tcpClient;
     public PlayerInfo playerInfo;
-    public int bufferSize = 4000;
-    public byte[] buffer;//4kb
+   
     
     public ClientSlot(int _id, TcpClient _tcpClient){
         id = _id;
         tcpClient = _tcpClient;
-
-
+        
         Server.clearDataEvent +=  ClearAllData;
-        buffer = new byte[bufferSize];
         playerInfo = new PlayerInfo{
             id = id
         };

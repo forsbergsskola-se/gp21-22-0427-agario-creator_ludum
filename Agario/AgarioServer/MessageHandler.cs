@@ -1,4 +1,5 @@
 using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Xml;
 using Newtonsoft.Json;
@@ -11,6 +12,7 @@ internal class MessageHandler{
     #region SendMessageRegion
     public static async Task PrepareThenSendMessage(string messageName, ClientSlot clientSlot){
 
+        Console.WriteLine("Checking Message type to send...");
         switch (messageName){
             case "InitialServerToClientMessage":{
                 Random random = new Random();
@@ -31,16 +33,17 @@ internal class MessageHandler{
                 break;
             }
             case "AllPlayerInfoMessage":{
-
+                
+                // var playerDictionaryAsJsonString = JsonConvert.SerializeObject(Server.connectedPlayerDictionary);
+                // Console.WriteLine(playerDictionaryAsJsonString);
+                //var idk = JsonConvert.SerializeObject(Server.connectedPlayerDictionary);
                 var message = new AllPlayerInfoMessage{
                     messageName = "AllPlayerInfoMessage",
-                    allPlayersInfoDictionary = Server.connectedPlayerDictionary
+                    allPlayersInfoArray = Server.connectedPlayerDictionary
                 };
-
-                foreach (var playerInDictionary in message.allPlayersInfoDictionary){
-                    Console.WriteLine("In Dictionary: " + playerInDictionary.Value.name);
-                }
                 
+                Console.WriteLine($"All Player Array: {message.allPlayersInfoArray}");
+                Console.WriteLine($"Player 1: {message.allPlayersInfoArray[1].name}");
                 
                 await SendMessageTask(message, clientSlot);
                 
@@ -54,18 +57,6 @@ internal class MessageHandler{
         }
     }
 
-    // static async Task SendAllPlayerInfoMessage(ClientSlot clientSlot, AllPlayerInfoMessage message){ //Special case when sending dictionary
-    //     var stream = clientSlot.tcpClient.GetStream();
-    //     var streamWriter = new StreamWriter(stream);
-    //     streamWriter.AutoFlush = true;
-    //     var jsonOptions = new JsonSerializerOptions(){
-    //         IncludeFields = true
-    //     };
-    //     var messageSerialized = JsonConvert.SerializeObject(message.allPlayersInfoDictionary);
-    //     
-    //     await streamWriter.WriteLineAsync(JsonSerializer.Serialize(messageSerialized, jsonOptions));
-    // }
-
     static async Task SendMessageTask<T>(T message, ClientSlot clientSlot){
         var id = clientSlot.id;
         var address = clientSlot.tcpClient.Client.RemoteEndPoint;
@@ -77,7 +68,6 @@ internal class MessageHandler{
         };
         
         Console.WriteLine($"Awaiting to send {message} to: {address} ({id})...");
-        //var serializedMessage = JsonConvert.SerializeObject(message);
         await streamWriter.WriteLineAsync(JsonSerializer.Serialize(message,jsonOptions));
         Console.WriteLine($"Sent {message} to: {address} ({id}).");
         await streamWriter.FlushAsync();
@@ -135,9 +125,8 @@ internal class MessageHandler{
                 
                 Console.WriteLine("Name: "+clientSlot.playerInfo.name + " Id: " + clientSlot.playerInfo.id + " Score: " +clientSlot.playerInfo.score + " Size: " +clientSlot.playerInfo.size +
                               ("ColorR: " +clientSlot.playerInfo.colorR + " ColorG: " + clientSlot.playerInfo.colorG + " ColorB: "+clientSlot.playerInfo.colorB) + " PositionX: " +clientSlot.playerInfo.positionX + " PositionY: " +clientSlot.playerInfo.positionY);
-                //Server.connectedPlayerDictionary[clientSlot.playerInfo.id] = clientSlot.playerInfo;
-                Server.connectedPlayerDictionary.Add(clientSlot.playerInfo.id.ToString(),clientSlot.playerInfo);
-                Console.WriteLine($"Adding PlayerInfo from Client ({id}): {Server.connectedPlayerDictionary[clientSlot.playerInfo.id.ToString()].name}");
+                Server.connectedPlayerDictionary[clientSlot.playerInfo.id] = clientSlot.playerInfo;
+                Console.WriteLine($"Adding PlayerInfo from Client ({id}): {Server.connectedPlayerDictionary[clientSlot.playerInfo.id].name}");
                 
                 PrepareThenSendMessage("AllPlayerInfoMessage",clientSlot);
                 break;

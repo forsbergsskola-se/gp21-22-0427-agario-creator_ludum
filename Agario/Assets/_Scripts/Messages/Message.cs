@@ -29,7 +29,7 @@ namespace Network{
     }
     
     [Serializable] public class AllPlayerInfoMessage : Message{
-        public Dictionary<string, PlayerInfo> allPlayersInfoDictionary;
+        public PlayerInfo[] allPlayersInfoArray; //Dictionary Converted to string
     }
  
 }

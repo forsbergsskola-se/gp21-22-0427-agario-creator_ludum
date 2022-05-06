@@ -1,3 +1,5 @@
+using System.Text.Json.Nodes;
+
 namespace AgarioServer;
 
 public class Message{
@@ -31,5 +33,5 @@ public class InitialServerToClientMessage : PositionMessage{
 }
 
 [Serializable] public class AllPlayerInfoMessage : Message{
-    public Dictionary<string, PlayerInfo> allPlayersInfoDictionary;
+    public PlayerInfo[] allPlayersInfoArray;  //Dictionary Converted to string
 }
