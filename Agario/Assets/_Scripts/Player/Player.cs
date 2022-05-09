@@ -60,6 +60,7 @@ public class Player : MonoBehaviour{
         //blabla = playerInfo.score;
         throw new NotImplementedException();
     }
+    
 
     void SetDisplayName(){
         Debug.Log($"Setting Everything ({playerInfo.id})");
@@ -82,5 +83,5 @@ public class Player : MonoBehaviour{
          public float size;
          public float positionX;
          public float positionY;
-         public float baseMovementSpeed; //TODO Assign
+         public float movementSpeed; //TODO Assign
      }

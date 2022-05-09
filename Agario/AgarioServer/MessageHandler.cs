@@ -26,6 +26,7 @@ internal class MessageHandler{
                     positionY = random.NextSingle() * (_mapSizeY / 2f),
                     score = 0,
                     size = 3f,
+                    movementSpeed = 20f,
                     mapSizeX = _mapSizeX,
                     mapSizeY = _mapSizeY
                 };

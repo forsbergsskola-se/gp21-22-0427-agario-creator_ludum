@@ -5,9 +5,10 @@ using UnityEditor;
 using UnityEngine;
 
 public class Movement : MonoBehaviour{
-    [SerializeField] PlayerSO playerSo;
     [SerializeField] Vector2SO mapSizeVector2;
     [SerializeField] UnityEventSO gameSceneLoadedSo;
+    
+    Player player;
     float speed;
     Camera camera;
     Vector2 mousePosition;
@@ -15,8 +16,9 @@ public class Movement : MonoBehaviour{
     bool enabled;
 
     void Start(){
-        speed = playerSo.baseMovementSpeed;
+        player = GetComponent<Player>();
         gameSceneLoadedSo.unityEventSo.AddListener(SetScriptActive);
+        
     }
 
     void Update(){
@@ -70,12 +72,6 @@ public class Movement : MonoBehaviour{
         Debug.Log("Enabling Movement...");
         Console.WriteLine($"Camera.main: {Camera.main}");
         enabled = true;
-        //StartCoroutine(nameof(AssignCameraWithDelay));
-    }
-
-    IEnumerable AssignCameraWithDelay(){
-        yield return new WaitForSeconds(1);
-        camera =  GameObject.FindWithTag("CameraMain").GetComponent<Camera>();
-        enabled = true;
+        speed = player.playerInfo.movementSpeed;
     }
 }

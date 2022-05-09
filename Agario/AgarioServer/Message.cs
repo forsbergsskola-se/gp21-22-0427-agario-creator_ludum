@@ -24,6 +24,7 @@ public class PositionMessage : Message{
 public class InitialServerToClientMessage : PositionMessage{
     public int score;
     public float size;
+    public float movementSpeed;
     public float mapSizeX;
     public float mapSizeY;
 }

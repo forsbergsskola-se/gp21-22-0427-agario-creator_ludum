@@ -7,10 +7,6 @@ namespace Network{
     public class Message{
         public string messageName;
     }
-    // public class ConnectToServerMessage : Message{
-    //     public string name;
-    //     public Color color;
-    // }
 
     public class PositionMessage : Message{
         public int id;
@@ -20,7 +16,8 @@ namespace Network{
 
     public class InitialServerToClientMessage : PositionMessage{
         public int score;
-        public float size; 
+        public float size;
+        public float movementSpeed;
         public float mapSizeX;
         public float mapSizeY;
     }

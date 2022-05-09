@@ -88,6 +88,7 @@ namespace Network{
                     playerInfo.id = message.id;
                     playerInfo.score = message.score;
                     playerInfo.size = message.size;
+                    playerInfo.movementSpeed = message.movementSpeed;
                     playerInfo.positionX = message.positionX;
                     playerInfo.positionY = message.positionY;
                     personalClient.mapSizeSo.vector2.x = message.mapSizeX;
