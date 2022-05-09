@@ -1,20 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class Orb : MonoBehaviour
-{
-   
-    
-    
-}
-
+namespace AgarioServer;
 
 public class OrbInfo{
     public int id;
     public int score;
 
-   // public int colorR;
+    // public int colorR;
     //public int colorG;
     //public int colorB;
 

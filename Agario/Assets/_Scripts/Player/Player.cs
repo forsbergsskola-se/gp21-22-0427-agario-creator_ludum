@@ -2,10 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
 
 public class Player : MonoBehaviour{
+    [SerializeField] TextMeshPro namePlate;
+    [SerializeField] IntUnityEventSo scoreUGUIEventSO;
     public ExecuteOnMainThread executeOnMainThread;
     public UnityEventSO playerReadyEventSo;
     public PlayerInfo playerInfo;
@@ -29,8 +32,8 @@ public class Player : MonoBehaviour{
         SetPosition();
         SetColor();
         SetScale();
-        //SetDisplayName();
-        //SetDisplayScore();
+        SetDisplayName();
+        SetDisplayScore();
         Debug.Log("Invoking Player Ready Event");
     }
 
@@ -57,31 +60,31 @@ public class Player : MonoBehaviour{
 
     void SetDisplayScore(){
         Debug.Log($"Setting Everything ({playerInfo.id})");
-        //blabla = playerInfo.score;
-        throw new NotImplementedException();
+        scoreUGUIEventSO.intUnityEventSo.Invoke(playerInfo.score);
     }
     
 
     void SetDisplayName(){
         Debug.Log($"Setting Everything ({playerInfo.id})");
-        //blabla = playerInfo.name;
-        throw new NotImplementedException();
+        namePlate.text = playerInfo.name;
     }
 
     #endregion
 }
 [Serializable]public class PlayerInfo{
-         public int id;
-         public int score;
-     
-         public string name;
-         
-         public int colorR;
-         public int colorG;
-         public int colorB;
 
-         public float size;
-         public float positionX;
-         public float positionY;
-         public float movementSpeed; //TODO Assign
-     }
+    public int id;
+
+    public int score;
+     
+    public string name;
+         
+    public int colorR;
+    public int colorG;
+    public int colorB;
+
+    public float size;
+    public float positionX;
+    public float positionY;
+    public float movementSpeed; 
+}
