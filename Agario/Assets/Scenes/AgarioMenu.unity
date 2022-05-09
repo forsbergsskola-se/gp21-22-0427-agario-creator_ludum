@@ -2435,7 +2435,7 @@ GameObject:
   - component: {fileID: 1518071429}
   m_Layer: 0
   m_Name: Main Camera
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2934,10 +2934,34 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 100701053458034630, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+      propertyPath: executeOnMainThread
+      value: 
+      objectReference: {fileID: 2071457891}
+    - target: {fileID: 100701053458034630, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+      propertyPath: preparePlayerInfoValues
+      value: 
+      objectReference: {fileID: 11400000, guid: 0100e00b952faa94f8d58e8efa029df5, type: 2}
     - target: {fileID: 6570157077206320689, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
       propertyPath: executeOnMainThread
       value: 
       objectReference: {fileID: 2071457891}
+    - target: {fileID: 6570157077206320689, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+      propertyPath: preparePlayerInfoValues
+      value: 
+      objectReference: {fileID: 11400000, guid: 0100e00b952faa94f8d58e8efa029df5, type: 2}
+    - target: {fileID: 9167968066163128976, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9167968066163128976, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9167968066163128976, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9167968066163128976, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -2998,6 +3022,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9167968066163128979, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+      propertyPath: gameSceneLoadedSo
+      value: 
+      objectReference: {fileID: 11400000, guid: e69e9cc2de6a24b46982d0f94e0183d1, type: 2}
     - target: {fileID: 9167968066163128991, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
       propertyPath: m_Name
       value: Player
@@ -3570,6 +3598,14 @@ PrefabInstance:
       propertyPath: agario
       value: 
       objectReference: {fileID: 102900000, guid: f07841620522a8443b2065d67f6e511b, type: 3}
+    - target: {fileID: 249421048752857333, guid: 56014cc0aed224b4aa9bd6351d5830be, type: 3}
+      propertyPath: gameSceneLoadedSo
+      value: 
+      objectReference: {fileID: 11400000, guid: e69e9cc2de6a24b46982d0f94e0183d1, type: 2}
+    - target: {fileID: 249421048752857333, guid: 56014cc0aed224b4aa9bd6351d5830be, type: 3}
+      propertyPath: executeOnMainThread
+      value: 
+      objectReference: {fileID: 2071457891}
     - target: {fileID: 249421048752857334, guid: 56014cc0aed224b4aa9bd6351d5830be, type: 3}
       propertyPath: m_Icon
       value: 

@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneChanger : MonoBehaviour{
     [SerializeField] UnityEventSO playerReadyEventSo;
+    [SerializeField] UnityEventSO gameSceneLoadedSo;
     [SerializeField] SceneAsset menuScene;
     [SerializeField] SceneAsset loadingScene;
     [SerializeField] SceneAsset gameScene;
@@ -19,6 +20,7 @@ public class SceneChanger : MonoBehaviour{
 
     void Start(){ 
         playerReadyEventSo.unityEventSo.AddListener(LoadGameScene);
+       
     }
 
     public void LoadMenuScene(){
@@ -29,16 +31,13 @@ public class SceneChanger : MonoBehaviour{
     }
 
     public void LoadGameScene(){
+        
         Debug.Log("Loading gameScene... ");
         SceneManager.LoadScene(gameScene.name,LoadSceneMode.Single);
+        gameSceneLoadedSo.unityEventSo.Invoke();
         Debug.Log("Finished loading gameScene. ");
     }
-
-    public async Task LoadGameSceneAsync(){
-        Debug.Log("Loading gameScene... ");
-       SceneManager.LoadScene(gameScene.name,LoadSceneMode.Single);
-        Debug.Log("Finished loading gameScene. ");
-    }
+    
 
 
 }

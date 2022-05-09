@@ -89,10 +89,10 @@ namespace Network{
         void OnApplicationQuit(){
             if (tcpClient != null){
                 _isConnected = false;
-                stream.Close();
-                stream.Dispose();
-                tcpClient.Client.Close();
-                tcpClient.Dispose();
+                stream?.Close();
+                stream?.Dispose();
+                tcpClient.Client?.Close();
+                tcpClient?.Dispose();
                 GC.Collect();
             }
         }

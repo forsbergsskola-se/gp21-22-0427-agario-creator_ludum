@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Network{
     public class MessageHandler : MonoBehaviour{
-        [SerializeField] UnityEventSO playerReadyEventSo;
+        public UnityEventSO playerReadyEventSo;
         [SerializeField] ExecuteOnMainThread executeOnMainThread;
         Player player;
         PersonalClient personalClient;
@@ -85,9 +85,13 @@ namespace Network{
             switch (identityMessage.messageName){
                 case "InitialServerToClientMessage":{
                     var message = JsonUtility.FromJson<InitialServerToClientMessage>(_jsonString);
-                    AssignPlayerInfoValuesFromMessage(message);
-
-                    //executeOnMainThread.Execute(()=>AssignPlayerInfoValuesFromMessage(message));
+                    playerInfo.id = message.id;
+                    playerInfo.score = message.score;
+                    playerInfo.size = message.size;
+                    playerInfo.positionX = message.positionX;
+                    playerInfo.positionY = message.positionY;
+                    personalClient.mapSizeSo.vector2.x = message.mapSizeX;
+                    personalClient.mapSizeSo.vector2.y = message.mapSizeY;
 
                     Debug.Log($"Id: {playerInfo.id}, score: {playerInfo.score}, size: {playerInfo.size}");
                     
@@ -134,16 +138,6 @@ namespace Network{
                 }
                 
             }
-        }
-
-        void AssignPlayerInfoValuesFromMessage(InitialServerToClientMessage message){
-            playerInfo.id = message.id;
-            playerInfo.score = message.score;
-            playerInfo.size = message.size;
-            playerInfo.positionX = message.positionX;
-            playerInfo.positionY = message.positionY;
-            personalClient.mapSizeSo.vector2.x = message.mapSizeX;
-            personalClient.mapSizeSo.vector2.y = message.mapSizeY;
         }
 
         #endregion
