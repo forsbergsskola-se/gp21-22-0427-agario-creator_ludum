@@ -12,10 +12,10 @@ public class Server{
     static readonly IPEndPoint hostEndpoint = new IPEndPoint(IPAddress.Any, port);
     static TcpListener hostListener;
     static UdpClient udpHost;
-    static int maxClients = 11;
+    static int maxClients = 10;
     static Dictionary<int, ClientSlot> connectedClientDictionary;
    //public static PlayerInfo[] connectedPlayerArray;
-   public static PlayerInfo[] connectedPlayerDictionary;
+   public static PlayerInfo[] connectedPlayerArray = new PlayerInfo[maxClients];
 
     public static Action<int> clearDataEvent;
     
@@ -35,7 +35,7 @@ public class Server{
         udpHost = new UdpClient(hostEndpoint);
         
         connectedClientDictionary = new Dictionary<int, ClientSlot>(maxClients);
-        connectedPlayerDictionary = new PlayerInfo[maxClients];
+        connectedPlayerArray = new PlayerInfo[maxClients];
         CreateEmptyClientSlots();
 
         Console.WriteLine($"Starting server...");
@@ -45,8 +45,10 @@ public class Server{
     }
 
     static void CreateEmptyClientSlots(){
-        for (int i = 1; i <= maxClients; i++){
+        //connectedPlayerArray[0] = new PlayerInfo();
+        for (int i = 1; i < maxClients; i++){
             connectedClientDictionary.Add(i, new ClientSlot(0, null));
+            connectedPlayerArray[i] = new PlayerInfo();
         }
     }
 

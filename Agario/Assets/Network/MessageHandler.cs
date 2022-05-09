@@ -7,6 +7,7 @@ using UnityEngine;
 namespace Network{
     public class MessageHandler : MonoBehaviour{
         [SerializeField] UnityEventSO playerReadyEventSo;
+        [SerializeField] ExecuteOnMainThread executeOnMainThread;
         Player player;
         PersonalClient personalClient;
         PlayerInfo playerInfo;
@@ -84,14 +85,12 @@ namespace Network{
             switch (identityMessage.messageName){
                 case "InitialServerToClientMessage":{
                     var message = JsonUtility.FromJson<InitialServerToClientMessage>(_jsonString);
-                    playerInfo.id = message.id;
-                    playerInfo.score = message.score;
-                    playerInfo.size = message.size;
-                    playerInfo.positionX = message.positionX;
-                    playerInfo.positionY = message.positionY;
-                    personalClient.mapSizeSo.vector2.x = message.mapSizeX;
-                    personalClient.mapSizeSo.vector2.y = message.mapSizeY;
+                    AssignPlayerInfoValuesFromMessage(message);
 
+                    //executeOnMainThread.Execute(()=>AssignPlayerInfoValuesFromMessage(message));
+
+                    Debug.Log($"Id: {playerInfo.id}, score: {playerInfo.score}, size: {playerInfo.size}");
+                    
                     await PrepareThenSendMessage("PlayerInfoMessage");
                     
                     break;
@@ -119,8 +118,8 @@ namespace Network{
                         Debug.Log("Active Player: "+playerInfomercial.name + $"({playerInfomercial.id})");
                     }
                     
-                    Debug.Log("Invoking Player Ready Event");
-                    playerReadyEventSo.unityEventSo.Invoke(); //Tells everyone who needs to know that the player is ready
+                    Debug.Log("Invoking Player Ready Event On Main Thread");
+                    executeOnMainThread.Execute(playerReadyEventSo.unityEventSo.Invoke); //Tells everyone who needs to know that the player is ready
                     
                     break;
                 }
@@ -135,6 +134,16 @@ namespace Network{
                 }
                 
             }
+        }
+
+        void AssignPlayerInfoValuesFromMessage(InitialServerToClientMessage message){
+            playerInfo.id = message.id;
+            playerInfo.score = message.score;
+            playerInfo.size = message.size;
+            playerInfo.positionX = message.positionX;
+            playerInfo.positionY = message.positionY;
+            personalClient.mapSizeSo.vector2.x = message.mapSizeX;
+            personalClient.mapSizeSo.vector2.y = message.mapSizeY;
         }
 
         #endregion

@@ -17,8 +17,8 @@ public class SceneChanger : MonoBehaviour{
         DontDestroyOnLoad(gameObject);
     }
 
-    void Start(){
-       // playerReadyEventSo.unityEventSo.AddListener(LoadGameScene);
+    void Start(){ 
+        playerReadyEventSo.unityEventSo.AddListener(LoadGameScene);
     }
 
     public void LoadMenuScene(){
@@ -30,7 +30,7 @@ public class SceneChanger : MonoBehaviour{
 
     public void LoadGameScene(){
         Debug.Log("Loading gameScene... ");
-        SceneManager.LoadScene(gameScene.name,LoadSceneMode.Additive);
+        SceneManager.LoadScene(gameScene.name,LoadSceneMode.Single);
         Debug.Log("Finished loading gameScene. ");
     }
 

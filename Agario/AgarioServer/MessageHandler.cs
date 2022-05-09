@@ -29,6 +29,7 @@ internal class MessageHandler{
                     mapSizeX = _mapSizeX,
                     mapSizeY = _mapSizeY
                 };
+                Console.WriteLine($"Clientslot Id ({clientSlot.id})");
                 await SendMessageTask(message,clientSlot);
                 break;
             }
@@ -39,7 +40,7 @@ internal class MessageHandler{
                 //var idk = JsonConvert.SerializeObject(Server.connectedPlayerDictionary);
                 var message = new AllPlayerInfoMessage{
                     messageName = "AllPlayerInfoMessage",
-                    allPlayersInfoArray = Server.connectedPlayerDictionary
+                    allPlayersInfoArray = Server.connectedPlayerArray
                 };
                 
                 Console.WriteLine($"All Player Array: {message.allPlayersInfoArray}");
@@ -125,8 +126,8 @@ internal class MessageHandler{
                 
                 Console.WriteLine("Name: "+clientSlot.playerInfo.name + " Id: " + clientSlot.playerInfo.id + " Score: " +clientSlot.playerInfo.score + " Size: " +clientSlot.playerInfo.size +
                               ("ColorR: " +clientSlot.playerInfo.colorR + " ColorG: " + clientSlot.playerInfo.colorG + " ColorB: "+clientSlot.playerInfo.colorB) + " PositionX: " +clientSlot.playerInfo.positionX + " PositionY: " +clientSlot.playerInfo.positionY);
-                Server.connectedPlayerDictionary[clientSlot.playerInfo.id] = clientSlot.playerInfo;
-                Console.WriteLine($"Adding PlayerInfo from Client ({id}): {Server.connectedPlayerDictionary[clientSlot.playerInfo.id].name}");
+                Server.connectedPlayerArray[clientSlot.playerInfo.id] = clientSlot.playerInfo;
+                Console.WriteLine($"Adding PlayerInfo from Client ({id}): {Server.connectedPlayerArray[clientSlot.playerInfo.id].name}");
                 
                 PrepareThenSendMessage("AllPlayerInfoMessage",clientSlot);
                 break;

@@ -15,7 +15,7 @@ public class Player : MonoBehaviour{
     
 
     void Awake(){
-        playerInfo = new PlayerInfo();
+        //playerInfo = new PlayerInfo();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
