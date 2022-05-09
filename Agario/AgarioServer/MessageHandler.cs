@@ -22,8 +22,8 @@ internal class MessageHandler{
                 var message = new InitialServerToClientMessage{
                     messageName = "InitialServerToClientMessage",
                     id = clientSlot.id,
-                    positionX = random.NextSingle() * _mapSizeX, //0-1 * 300 can be 0.34*300 == 102
-                    positionY = random.NextSingle() * _mapSizeY,
+                    positionX = random.NextSingle() * (_mapSizeX / 2f), //0-1 * 300 can be 0.34*300 == 102
+                    positionY = random.NextSingle() * (_mapSizeY / 2f),
                     score = 0,
                     size = 3f,
                     mapSizeX = _mapSizeX,
