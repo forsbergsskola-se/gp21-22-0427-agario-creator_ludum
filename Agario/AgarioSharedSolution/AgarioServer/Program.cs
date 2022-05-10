@@ -6,6 +6,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using AgarioServer;
+using AgarioShared;
+using Network;
 
 public class Server{
     static readonly int port = 9000;

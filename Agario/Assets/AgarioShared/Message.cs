@@ -20,21 +20,21 @@ namespace Network{
         public float mapSizeX;
         public float mapSizeY;
     }
-    [Serializable]public class PlayerInfoMessage : Message{
+    public class PlayerInfoMessage : Message{
         public PlayerInfo playerInfo;
     }
     
-    [Serializable] public class AllPlayerInfoMessage : Message{
+     public class AllPlayerInfoMessage : Message{
         public PlayerInfo[] allPlayersInfoArray; //Dictionary Converted to string
     }
     
     //Orbs 
-    [Serializable]
+    
     public class OrbInfoMessage : Message{
         public OrbInfo orb;
     }
 
-    [Serializable]
+    
     public class AllOrbsInfoMessage : Message{
         public OrbInfo[] allOrbsArray;
     }

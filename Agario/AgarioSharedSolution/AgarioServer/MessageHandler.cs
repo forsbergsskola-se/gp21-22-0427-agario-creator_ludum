@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Xml;
+using Network;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
@@ -35,10 +36,6 @@ internal class MessageHandler{
                 break;
             }
             case "AllPlayerInfoMessage":{
-                
-                // var playerDictionaryAsJsonString = JsonConvert.SerializeObject(Server.connectedPlayerDictionary);
-                // Console.WriteLine(playerDictionaryAsJsonString);
-                //var idk = JsonConvert.SerializeObject(Server.connectedPlayerDictionary);
                 var message = new AllPlayerInfoMessage{
                     messageName = "AllPlayerInfoMessage",
                     allPlayersInfoArray = Server.connectedPlayerArray

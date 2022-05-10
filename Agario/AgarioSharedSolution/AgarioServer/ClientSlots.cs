@@ -1,4 +1,6 @@
 using System.Net.Sockets;
+using AgarioShared;
+
 namespace AgarioServer;
 internal class ClientSlot{
     public int id;
