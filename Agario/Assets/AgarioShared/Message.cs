@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
-using UnityEngine;
-using Vector2 = System.Numerics.Vector2;
+using AgarioShared;
+
 
 namespace Network{
     public class Message{

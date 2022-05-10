@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AgarioShared;
 using TMPro;
 using UnityEngine;
 
@@ -70,21 +71,4 @@ public class Player : MonoBehaviour{
     }
 
     #endregion
-}
-[Serializable]public class PlayerInfo{
-
-    public int id;
-
-    public int score;
-     
-    public string name;
-         
-    public int colorR;
-    public int colorG;
-    public int colorB;
-
-    public float size;
-    public float positionX;
-    public float positionY;
-    public float movementSpeed; 
 }

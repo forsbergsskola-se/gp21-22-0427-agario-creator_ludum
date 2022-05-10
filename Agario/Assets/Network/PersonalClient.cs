@@ -6,10 +6,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using AgarioShared;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.Scripting;
 using Newtonsoft.Json;
+using ILogger = AgarioShared.ILogger;
 
 namespace Network{
     public class PersonalClient : MonoBehaviour{
@@ -17,7 +19,7 @@ namespace Network{
 
         [SerializeField] public Vector2SO mapSizeSo;
         [SerializeField]  Player player;
-
+        
         PlayerInfo playerInfo;
         MessageHandler messageHandler;
         static IPEndPoint serverEndPoint;
@@ -43,7 +45,6 @@ namespace Network{
                 }
             }
         }
-
         void Awake(){
             DontDestroyOnLoad(gameObject);
             messageHandler = GetComponent<MessageHandler>();
