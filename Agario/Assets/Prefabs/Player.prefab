@@ -109,8 +109,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -203,7 +203,7 @@ Transform:
   m_GameObject: {fileID: 9167968066163128991}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3, y: 3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4683598380464307454}
@@ -252,7 +252,7 @@ SpriteRenderer:
   m_SortingLayer: 3
   m_SortingOrder: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.45579523, g: 0.1730865, b: 0.49056602, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -275,7 +275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapSizeVector2: {fileID: 11400000, guid: 9018255e54ce94940813372bd8d9a175, type: 2}
-  gameSceneLoadedSo: {fileID: 0}
+  gameSceneLoadedSo: {fileID: 11400000, guid: e69e9cc2de6a24b46982d0f94e0183d1, type: 2}
 --- !u!114 &100701053458034630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,9 +288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa518df57689b154ea11f711e5386f83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  namePlate: {fileID: 0}
-  scoreUGUIEventSO: {fileID: 0}
-  executeOnMainThread: {fileID: 0}
+  scoreUGUIEventSO: {fileID: 11400000, guid: 5612272bb819b4e48b29a52ad25e8d0a, type: 2}
   playerReadyEventSo: {fileID: 11400000, guid: 9d53dbfa74ccfba48b1cc16f012c3e66, type: 2}
   playerInfo:
     id: 0
@@ -303,7 +301,7 @@ MonoBehaviour:
     positionX: 0
     positionY: 0
     movementSpeed: 0
-  allActivePlayersArray: []
+  isMainPlayer: 0
 --- !u!114 &9125246982590286810
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +330,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerReadyEventSo: {fileID: 11400000, guid: 9d53dbfa74ccfba48b1cc16f012c3e66, type: 2}
   executeOnMainThread: {fileID: 0}
+  maxPlayersAllowedEventSo: {fileID: 11400000, guid: 9a633fcf8c47a8f48b81155541a82cbd, type: 2}
+  playerInfoReceivedFromServerEventSo: {fileID: 11400000, guid: d61de55e660fa3b4da0154f3331ea739, type: 2}
+  playerDisconnectedEventSo: {fileID: 11400000, guid: d61de55e660fa3b4da0154f3331ea739, type: 2}
 --- !u!81 &2783421054161814216
 AudioListener:
   m_ObjectHideFlags: 0

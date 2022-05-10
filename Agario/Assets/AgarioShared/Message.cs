@@ -15,6 +15,7 @@ namespace Network{
 
     public class InitialServerToClientMessage : PositionMessage{
         public int score;
+        public int maxPlayers;
         public float size;
         public float movementSpeed;
         public float mapSizeX;

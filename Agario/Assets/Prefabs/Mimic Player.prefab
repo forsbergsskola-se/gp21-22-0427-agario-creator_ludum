@@ -97,6 +97,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa518df57689b154ea11f711e5386f83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  namePlate: {fileID: 0}
+  scoreUGUIEventSO: {fileID: 11400000, guid: 5612272bb819b4e48b29a52ad25e8d0a, type: 2}
+  executeOnMainThread: {fileID: 0}
   playerReadyEventSo: {fileID: 11400000, guid: 9d53dbfa74ccfba48b1cc16f012c3e66, type: 2}
   playerInfo:
     id: 0
@@ -108,4 +111,4 @@ MonoBehaviour:
     size: 0
     positionX: 0
     positionY: 0
-  allActivePlayersArray: []
+    movementSpeed: 0

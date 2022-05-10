@@ -14,7 +14,7 @@ public class Server{
     static readonly IPEndPoint hostEndpoint = new IPEndPoint(IPAddress.Any, port);
     static TcpListener hostListener;
     static UdpClient udpHost;
-    static int maxClients = 10;
+    public static int maxClients = 10;
     static Dictionary<int, ClientSlot> connectedClientDictionary;
    //public static PlayerInfo[] connectedPlayerArray;
    public static PlayerInfo[] connectedPlayerArray = new PlayerInfo[maxClients];

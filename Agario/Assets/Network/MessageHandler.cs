@@ -9,6 +9,9 @@ namespace Network{
     public class MessageHandler : MonoBehaviour{
         public UnityEventSO playerReadyEventSo;
         [SerializeField] ExecuteOnMainThread executeOnMainThread;
+        [SerializeField] IntUnityEventSo maxPlayersAllowedEventSo;
+        [SerializeField] PlayerInfoUnityEventSo playerInfoReceivedFromServerEventSo;
+        [SerializeField] PlayerInfoUnityEventSo playerDisconnectedEventSo;
         Player player;
         PersonalClient personalClient;
         PlayerInfo playerInfo;
@@ -95,6 +98,8 @@ namespace Network{
                     personalClient.mapSizeSo.vector2.x = message.mapSizeX;
                     personalClient.mapSizeSo.vector2.y = message.mapSizeY;
 
+                    player.isMainPlayer = true;
+                    executeOnMainThread.Execute(()=> maxPlayersAllowedEventSo.intUnityEventSo.Invoke(message.maxPlayers));
                     Debug.Log($"Id: {playerInfo.id}, score: {playerInfo.score}, size: {playerInfo.size}");
                     
                     await PrepareThenSendMessage("PlayerInfoMessage");
@@ -113,16 +118,31 @@ namespace Network{
                         throw new ArgumentNullException();
                     }
                     
-                    player.allActivePlayersArray = new PlayerInfo[message.allPlayersInfoArray.Length];
-                    player.allActivePlayersArray = message.allPlayersInfoArray;
-
-                    foreach (var playerInfomercial in  player.allActivePlayersArray){
-                        if (playerInfomercial.id == default){
+                    foreach (var _playerInfo in message.allPlayersInfoArray){
+                        if (_playerInfo.id == playerInfo.id ||_playerInfo.id == default){
                             continue;
                         }
-
-                        Debug.Log("Active Player: "+playerInfomercial.name + $"({playerInfomercial.id})");
+                        Debug.Log($"Invoking playerInfoEvent for player ({_playerInfo.id})");
+                        executeOnMainThread.Execute(
+                            () => playerInfoReceivedFromServerEventSo.playerInfoUnityEventSo.Invoke(_playerInfo));
                     }
+                    
+                    // globalPlayerManager.allActivePlayersArray = new PlayerInfo[message.allPlayersInfoArray.Length];
+                    // globalPlayerManager.allActivePlayersArray = message.allPlayersInfoArray;
+                    //
+                    // foreach (var playerInfomercial in  globalPlayerManager.allActivePlayersArray){
+                    //     if (playerInfomercial.id == default){
+                    //         continue;
+                    //     }
+                    //     
+                    //     if (playerInfomercial.id == playerInfo.id){
+                    //         Debug.Log("Active Player (You): "+playerInfomercial.name + $"({playerInfomercial.id})");
+                    //         continue;
+                    //     }
+                    //     Debug.Log("Active Player: "+playerInfomercial.name + $"({playerInfomercial.id})");
+                    //     globalPlayerManager.cplayerInfomercial.CreatePlayer();
+                    //
+                    // }
                     
                     Debug.Log("Invoking Player Ready Event On Main Thread");
                     executeOnMainThread.Execute(playerReadyEventSo.unityEventSo.Invoke); //Tells everyone who needs to know that the player is ready

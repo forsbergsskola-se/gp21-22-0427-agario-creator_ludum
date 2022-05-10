@@ -3,32 +3,38 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AgarioShared;
+using JetBrains.Annotations;
 using TMPro;
 using UnityEngine;
 
 
 public class Player : MonoBehaviour{
-    [SerializeField] TextMeshPro namePlate;
-    [SerializeField] IntUnityEventSo scoreUGUIEventSO;
-    public ExecuteOnMainThread executeOnMainThread;
+    [SerializeField] [CanBeNull] IntUnityEventSo scoreUGUIEventSO;
+    
+    
     public UnityEventSO playerReadyEventSo;
     public PlayerInfo playerInfo;
-    public  PlayerInfo[] allActivePlayersArray;
+    public bool isMainPlayer;
     
+    ExecuteOnMainThread executeOnMainThread;
+    TextMeshPro namePlate;
     SpriteRenderer spriteRenderer;
     Color colorr;
 
     void Awake(){
         spriteRenderer = GetComponent<SpriteRenderer>();
+        namePlate = GetComponentInChildren<TextMeshPro>();
+        executeOnMainThread = FindObjectOfType<ExecuteOnMainThread>();
     }
 
     void Start(){
         executeOnMainThread.Execute(() => playerReadyEventSo.unityEventSo.AddListener(()=>executeOnMainThread.Execute(SetEverything)));
     }
 
+    
     #region SetVariablesRegion
     
-    void SetEverything(){
+    public void SetEverything(){
         Debug.Log($"Setting Everything ({playerInfo.id})");
         SetPosition();
         SetColor();
@@ -60,6 +66,10 @@ public class Player : MonoBehaviour{
     }
 
     void SetDisplayScore(){
+        if (!isMainPlayer){
+            Debug.Log($"Player : {playerInfo.name} + ({playerInfo.id}) is not MainPlayer and will not display Score atm.");
+            return;
+        }
         Debug.Log($"Setting Everything ({playerInfo.id})");
         scoreUGUIEventSO.intUnityEventSo.Invoke(playerInfo.score);
     }
