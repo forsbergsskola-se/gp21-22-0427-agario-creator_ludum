@@ -48,18 +48,19 @@ public class GlobalPlayerManager : MonoBehaviour{
     }
     
     void CreateNewPlayer(PlayerInfo _playerInfo){
-        
+        Debug.Log($"Spawning player: {_playerInfo.name} ({_playerInfo.id})...");
         var spawnedPlayer = Instantiate(playerPrefab, new Vector3(_playerInfo.positionX,_playerInfo.positionY),quaternion.identity);
         var player = spawnedPlayer.GetComponent<Player>();
         player.playerInfo = _playerInfo;
         player.SetEverything();
         activePlayerDictionary[_playerInfo.id] = player;
+        Debug.Log($"Spawned player: {_playerInfo.name} ({_playerInfo.id}).");
     }
 
     void DestroyPlayer(PlayerInfo _playerInfo){
-        Debug.Log($"Destroying: {_playerInfo.name} + ({_playerInfo.id})...");
+        Debug.Log($"Destroying: {_playerInfo.name} ({_playerInfo.id})...");
         Destroy(activePlayerDictionary[_playerInfo.id].gameObject);
-        Debug.Log($"Destroyed: {_playerInfo.name} + ({_playerInfo.id}).");
+        Debug.Log($"Destroyed: {_playerInfo.name} ({_playerInfo.id}).");
         activePlayerDictionary.Remove(_playerInfo.id);
     }
 

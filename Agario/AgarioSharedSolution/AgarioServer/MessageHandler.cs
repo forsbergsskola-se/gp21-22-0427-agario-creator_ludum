@@ -2,6 +2,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
 using System.Xml;
+using AgarioShared;
 using Network;
 using Newtonsoft.Json;
 using JsonSerializer = System.Text.Json.JsonSerializer;
@@ -56,6 +57,16 @@ internal class MessageHandler{
                 
                 break;
             }
+            case "PlayerInfoMessage":{
+                var message = new PlayerInfoMessage{
+                    messageName = "PlayerInfoMessage",
+                    playerInfo = clientSlot.playerInfo
+                };
+
+                await SendMessageTask(message, clientSlot);
+                break;
+            }
+                
             default:{
                 throw new NotImplementedException();
             }
@@ -101,8 +112,16 @@ internal class MessageHandler{
                 Console.WriteLine($"Data stream from {address} ({id}) was empty, discarding.");
             
                 //Disconnecting Client
-                clientSlot.ClearAllData(id);
-            
+               
+                Server.connectedPlayerArray[id] = new PlayerInfo();
+
+                foreach (var slot in Server.connectedClientDictionary){
+                    if (slot.Value.id == default || slot.Value.id == clientSlot.id){
+                        continue;
+                    }
+                    PrepareThenSendMessage("AllPlayerInfoMessage", slot.Value);
+                }
+                await clientSlot.ClearAllData(id);
                 continue;
             }
 

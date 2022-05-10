@@ -15,7 +15,7 @@ public class Server{
     static TcpListener hostListener;
     static UdpClient udpHost;
     public static int maxClients = 10;
-    static Dictionary<int, ClientSlot> connectedClientDictionary;
+   public static Dictionary<int, ClientSlot> connectedClientDictionary;
    //public static PlayerInfo[] connectedPlayerArray;
    public static PlayerInfo[] connectedPlayerArray = new PlayerInfo[maxClients];
 
@@ -61,8 +61,8 @@ public class Server{
             
             Console.WriteLine($"New Client accepted.");
             var activatedClientSlot = await TryAssignClientToDictionary(tcpClient);
-            new Task(()=> MessageHandler.PrepareThenSendMessage("InitialServerToClientMessage", activatedClientSlot).Start()).Start();
-            new Task(()=> MessageHandler.StartReceivingMessagesTask(activatedClientSlot).Start()).Start();
+            new Task(()=> MessageHandler.PrepareThenSendMessage("InitialServerToClientMessage", activatedClientSlot)).Start();
+            new Task(()=> MessageHandler.StartReceivingMessagesTask(activatedClientSlot)).Start();
         }
     }
 
