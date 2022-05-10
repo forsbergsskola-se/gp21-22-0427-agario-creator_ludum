@@ -31,7 +31,7 @@ public class GlobalPlayerManager : MonoBehaviour{
     }
 
     void HandlePlayerInfo(PlayerInfo _playerInfo){
-        if (activePlayerDictionary[_playerInfo.id] == null ){
+        if (activePlayerDictionary.ContainsKey(_playerInfo.id)){
             CreateNewPlayer(_playerInfo);
             return;
         }

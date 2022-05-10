@@ -15,11 +15,9 @@ public class Player : MonoBehaviour{
     public UnityEventSO playerReadyEventSo;
     public PlayerInfo playerInfo;
     
-    
     ExecuteOnMainThread executeOnMainThread;
     TextMeshPro namePlate;
     SpriteRenderer spriteRenderer;
-    Color colorr;
 
     void Awake(){
         spriteRenderer = GetComponent<SpriteRenderer>();
