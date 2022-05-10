@@ -9,12 +9,12 @@ using UnityEngine;
 
 
 public class Player : MonoBehaviour{
-    [SerializeField] [CanBeNull] IntUnityEventSo scoreUGUIEventSO;
-    
+    [SerializeField]  IntUnityEventSo scoreUGUIEventSO;
+    [SerializeField] bool isMainPlayer;
     
     public UnityEventSO playerReadyEventSo;
     public PlayerInfo playerInfo;
-    public bool isMainPlayer;
+    
     
     ExecuteOnMainThread executeOnMainThread;
     TextMeshPro namePlate;

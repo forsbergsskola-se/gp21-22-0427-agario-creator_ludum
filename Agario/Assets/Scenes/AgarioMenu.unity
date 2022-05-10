@@ -3129,6 +3129,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 100701053458034630, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+      propertyPath: isMainPlayer
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6570157077206320689, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
       propertyPath: executeOnMainThread
       value: 

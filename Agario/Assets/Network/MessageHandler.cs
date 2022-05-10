@@ -11,7 +11,7 @@ namespace Network{
         [SerializeField] ExecuteOnMainThread executeOnMainThread;
         [SerializeField] IntUnityEventSo maxPlayersAllowedEventSo;
         [SerializeField] PlayerInfoUnityEventSo playerInfoReceivedFromServerEventSo;
-        [SerializeField] PlayerInfoUnityEventSo playerDisconnectedEventSo;
+        // [SerializeField] PlayerInfoUnityEventSo playerDisconnectedEventSo;
         Player player;
         PersonalClient personalClient;
         PlayerInfo playerInfo;
@@ -97,8 +97,7 @@ namespace Network{
                     playerInfo.positionY = message.positionY;
                     personalClient.mapSizeSo.vector2.x = message.mapSizeX;
                     personalClient.mapSizeSo.vector2.y = message.mapSizeY;
-
-                    player.isMainPlayer = true;
+                    
                     executeOnMainThread.Execute(()=> maxPlayersAllowedEventSo.intUnityEventSo.Invoke(message.maxPlayers));
                     Debug.Log($"Id: {playerInfo.id}, score: {playerInfo.score}, size: {playerInfo.size}");
                     

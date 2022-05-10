@@ -43,7 +43,14 @@ internal class MessageHandler{
                 };
                 
                 Console.WriteLine($"All Player Array: {message.allPlayersInfoArray}");
-                Console.WriteLine($"Player 1: {message.allPlayersInfoArray[1].name}");
+               
+
+                foreach (var _playerInfo in message.allPlayersInfoArray){
+                    if (_playerInfo == null){
+                        continue;
+                    }
+                    Console.WriteLine($"Player {_playerInfo.id}:  {_playerInfo.name}");
+                }
                 
                 await SendMessageTask(message, clientSlot);
                 
