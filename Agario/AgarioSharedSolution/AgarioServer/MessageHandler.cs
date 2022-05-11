@@ -155,6 +155,13 @@ internal class MessageHandler{
                 Console.WriteLine($"Adding PlayerInfo from Client ({id}): {Server.connectedPlayerArray[clientSlot.playerInfo.id].name}");
                 
                 PrepareThenSendMessage("AllPlayerInfoMessage",clientSlot);
+                foreach (var connectedClient in Server.connectedClientDictionary){
+                    if (connectedClient.Key == id){
+                        continue;
+                    }
+
+                    PrepareThenSendMessage("AllPlayerInfoMessage", connectedClient.Value);
+                }
                 break;
             }
             

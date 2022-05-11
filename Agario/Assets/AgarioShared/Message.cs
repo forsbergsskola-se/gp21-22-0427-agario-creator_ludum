@@ -5,6 +5,14 @@ using AgarioShared;
 namespace Network{
     public class Message{
         public string messageName;
+
+        public Message(){
+            messageName = GetType().FullName;
+        }
+    }
+
+    public class Message<T> : Message{
+        
     }
 
     public class PositionMessage : Message{
