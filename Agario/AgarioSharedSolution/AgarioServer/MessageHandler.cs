@@ -66,12 +66,41 @@ internal class MessageHandler{
                 await SendMessageTask(message, clientSlot);
                 break;
             }
+            // case "NewPlayerJoinedInfoMessage":{
+            //     var message = new NewPlayerJoinedInfoMessage{
+            //        // messageName = blabla
+            //         playerInfo = clientSlot.playerInfo,
+            //     };
+            //     Console.WriteLine($"New Player Joined Message to send: {message.playerInfo.name} ({message.playerInfo.id})");
+            //     await SendMessageTask(message, clientSlot);
+            //     break;
+            // }
                 
             default:{
                 throw new NotImplementedException();
             }
                 
                 
+        }
+    }
+
+    public static async Task PrepareThenSendMessageToAllConnectedClients<T>(string messageName, T content){
+        Console.WriteLine("Checking Message type to send to all clients...");
+        switch (messageName){
+            case "NewPlayerJoinedInfoMessage":{
+                var message = new NewPlayerJoinedInfoMessage{
+                    playerInfo = content as PlayerInfo,
+                };
+                Console.WriteLine($"New Player Joined Message to send: {message.playerInfo.name} ({message.playerInfo.id})");
+                foreach (var connectedClient in Server.connectedClientDictionary){
+                    if (connectedClient.Value.id == (content as PlayerInfo).id){
+                        continue;
+                    }
+                    await SendMessageTask(message, connectedClient.Value);
+                }
+                
+                break;
+            }
         }
     }
 
@@ -155,13 +184,9 @@ internal class MessageHandler{
                 Console.WriteLine($"Adding PlayerInfo from Client ({id}): {Server.connectedPlayerArray[clientSlot.playerInfo.id].name}");
                 
                 PrepareThenSendMessage("AllPlayerInfoMessage",clientSlot);
-                foreach (var connectedClient in Server.connectedClientDictionary){
-                    if (connectedClient.Key == id){
-                        continue;
-                    }
-
-                    PrepareThenSendMessage("AllPlayerInfoMessage", connectedClient.Value);
-                }
+                
+                
+                PrepareThenSendMessageToAllConnectedClients("NewPlayerJoinedInfoMessage", message.playerInfo);
                 break;
             }
             

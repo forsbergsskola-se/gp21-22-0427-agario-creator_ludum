@@ -7,7 +7,7 @@ namespace Network{
         public string messageName;
 
         public Message(){
-            messageName = GetType().FullName;
+            messageName = GetType().Name;
         }
     }
 
@@ -31,6 +31,9 @@ namespace Network{
     }
     public class PlayerInfoMessage : Message{
         public PlayerInfo playerInfo;
+    }
+
+    public class NewPlayerJoinedInfoMessage : PlayerInfoMessage{
     }
     
      public class AllPlayerInfoMessage : Message{

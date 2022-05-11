@@ -11,6 +11,7 @@ namespace Network{
         [SerializeField] ExecuteOnMainThread executeOnMainThread;
         [SerializeField] IntUnityEventSo maxPlayersAllowedEventSo;
         [SerializeField] PlayerInfoUnityEventSo playerInfoReceivedFromServerEventSo;
+        [SerializeField] PlayerInfoUnityEventSo newPlayerJoinedEventSo;
         // [SerializeField] PlayerInfoUnityEventSo playerDisconnectedEventSo;
         Player player;
         PersonalClient personalClient;
@@ -109,6 +110,15 @@ namespace Network{
                 case "PlayerInfoMessage":{
                     var message = JsonUtility.FromJson<PlayerInfoMessage>(_jsonString);
                     playerInfo = message.playerInfo;
+                    break;
+                }
+                case "NewPlayerJoinedInfoMessage":{
+                    var message = JsonUtility.FromJson<NewPlayerJoinedInfoMessage>(_jsonString);
+
+                    Debug.Log($"New Player Joined Message Received: {message.playerInfo.name} ({message.playerInfo.id})");
+                    Debug.Log("Invoking newPlayerJoinedEvent");
+                    executeOnMainThread.Execute(()=> newPlayerJoinedEventSo.playerInfoUnityEventSo.Invoke(message.playerInfo));
+                   
                     break;
                 }
                 case "AllPlayerInfoMessage":{

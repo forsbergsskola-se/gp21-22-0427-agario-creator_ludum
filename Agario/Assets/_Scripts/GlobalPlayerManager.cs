@@ -10,6 +10,7 @@ using Random = UnityEngine.Random;
 
 public class GlobalPlayerManager : MonoBehaviour{
     [SerializeField] PlayerInfoUnityEventSo playerInfoReceivedFromServerEventSo;
+    [SerializeField] PlayerInfoUnityEventSo newPlayerJoinedEventSo;
     //[SerializeField] PlayerInfoUnityEventSo playerDisconnectedEventSo;
     [SerializeField] GameObject playerPrefab;
     //[SerializeField] GameObject map;
@@ -27,6 +28,7 @@ public class GlobalPlayerManager : MonoBehaviour{
     void Start(){
         maxPlayersAllowedEventSo.intUnityEventSo.AddListener(SetMaxPlayers);
         executeOnMainThread.Execute(() => playerInfoReceivedFromServerEventSo.playerInfoUnityEventSo.AddListener(HandlePlayerInfo));
+        executeOnMainThread.Execute(()=> newPlayerJoinedEventSo.playerInfoUnityEventSo.AddListener(HandlePlayerInfo));
         //executeOnMainThread.Execute(()=> playerDisconnectedEventSo.playerInfoUnityEventSo.AddListener(DestroyPlayer));
     }
 
