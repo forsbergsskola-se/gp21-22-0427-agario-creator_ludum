@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class UpdatePlayerPositionValues : MonoBehaviour{
     [SerializeField] MessageHandler messageHandler;
+    [SerializeField] BoolSO gameSceneIsActiveBoolSo;
     Player player;
     
     Vector2 TempPosition{
@@ -21,6 +22,9 @@ public class UpdatePlayerPositionValues : MonoBehaviour{
     }
 
     void FixedUpdate(){
+        if (!gameSceneIsActiveBoolSo.boolSo){
+            return;
+        }
         TempPosition = transform.position;
     }
 }

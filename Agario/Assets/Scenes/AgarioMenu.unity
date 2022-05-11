@@ -243,6 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageHandler: {fileID: 75329697}
+  gameSceneIsActiveBoolSo: {fileID: 0}
 --- !u!1 &88037765
 GameObject:
   m_ObjectHideFlags: 0
@@ -3226,6 +3227,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9167968066163128979, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+      propertyPath: gameSceneIsActiveBoolSo
+      value: 
+      objectReference: {fileID: 11400000, guid: c1c6b0c7378f01e4698bc49f92ca5122, type: 2}
     - target: {fileID: 9167968066163128991, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
       propertyPath: m_Name
       value: Player
@@ -3706,6 +3711,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   messageHandler: {fileID: 2056550701}
+  gameSceneIsActiveBoolSo: {fileID: 11400000, guid: c1c6b0c7378f01e4698bc49f92ca5122, type: 2}
 --- !u!114 &2071457891 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2071457891, guid: 56014cc0aed224b4aa9bd6351d5830be, type: 3}
@@ -3859,6 +3865,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 249421048752857333, guid: 56014cc0aed224b4aa9bd6351d5830be, type: 3}
+      propertyPath: gameSceneIsActiveBoolSo
+      value: 
+      objectReference: {fileID: 11400000, guid: c1c6b0c7378f01e4698bc49f92ca5122, type: 2}
     - target: {fileID: 249421048752857334, guid: 56014cc0aed224b4aa9bd6351d5830be, type: 3}
       propertyPath: m_Name
       value: Game Manager

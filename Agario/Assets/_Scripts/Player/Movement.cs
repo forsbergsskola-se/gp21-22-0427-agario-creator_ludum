@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour{
     [SerializeField] Vector2SO mapSizeVector2;
-    [SerializeField] UnityEventSO gameSceneLoadedSo;
+    [SerializeField] BoolSO gameSceneIsActiveBoolSo;
     
     Player player;
     float speed;
@@ -17,17 +17,16 @@ public class Movement : MonoBehaviour{
 
     void Start(){
         player = GetComponent<Player>();
-        gameSceneLoadedSo.unityEventSo.AddListener(SetScriptActive);
-        
     }
 
     void Update(){
-        if (!enabled){
+        if (!gameSceneIsActiveBoolSo.boolSo){
             return;
         }
 
         if (camera == null){
             camera =  GameObject.FindWithTag("MainCamera")?.GetComponent<Camera>();
+            speed = player.playerInfo.movementSpeed;
         }
 
         EnsureStayingOnMap();
@@ -66,12 +65,5 @@ public class Movement : MonoBehaviour{
         }
 
         transform.position = new Vector2(positionX, positionY);
-    }
-
-    void SetScriptActive(){
-        Debug.Log("Enabling Movement...");
-        Console.WriteLine($"Camera.main: {Camera.main}");
-        enabled = true;
-        speed = player.playerInfo.movementSpeed;
     }
 }

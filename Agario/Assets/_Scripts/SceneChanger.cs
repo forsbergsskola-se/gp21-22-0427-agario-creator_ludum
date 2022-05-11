@@ -9,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneChanger : MonoBehaviour{
     [SerializeField] UnityEventSO playerReadyEventSo;
-    [SerializeField] UnityEventSO gameSceneLoadedSo;
+    [SerializeField] BoolSO gameSceneIsActiveBoolSo;
     [SerializeField] SceneAsset menuScene;
     [SerializeField] SceneAsset loadingScene;
     [SerializeField] SceneAsset gameScene;
@@ -34,10 +34,12 @@ public class SceneChanger : MonoBehaviour{
         
         Debug.Log("Loading gameScene... ");
         SceneManager.LoadScene(gameScene.name,LoadSceneMode.Single);
-        gameSceneLoadedSo.unityEventSo.Invoke();
+        gameSceneIsActiveBoolSo.boolSo = true;
         Debug.Log("Finished loading gameScene. ");
     }
-    
 
 
+    void OnApplicationQuit(){
+        gameSceneIsActiveBoolSo.boolSo = false;
+    }
 }
