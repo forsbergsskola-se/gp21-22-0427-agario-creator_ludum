@@ -22,10 +22,11 @@ namespace Network{
         
         PlayerInfo playerInfo;
         MessageHandler messageHandler;
-        static IPEndPoint serverEndPoint;
+        internal IPEndPoint serverEndPoint;
 
 
         TcpClient tcpClient;
+        internal UdpClient udpClient;
         internal StreamReader streamReader;
         internal StreamWriter streamWriter;
         NetworkStream stream;
@@ -41,7 +42,7 @@ namespace Network{
                 _isConnected = value;
                 if (IsConnected){
                     Console.WriteLine("Is Connected: "+IsConnected);
-                    new Task(() => messageHandler.ListenForMessageAsync().Start()).Start();
+                    new Task(() => messageHandler.ListenForMessageAsync()).Start();
                 }
             }
         }
@@ -56,6 +57,7 @@ namespace Network{
             nameCriteria = ",.;:0123456789 ";
             maxNameLenght = 15;
             tcpClient = new TcpClient();
+            udpClient = new UdpClient();
         }
 
         public void Connect(){
@@ -64,7 +66,8 @@ namespace Network{
                 return;
             }
 
-            new Task(() => ConnectToServer().Start()).Start();
+            new Task(() => ConnectToServer()).Start();
+            
         }
 
         async Task ConnectToServer(){

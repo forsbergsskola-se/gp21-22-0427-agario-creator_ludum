@@ -28,7 +28,7 @@ public class Server{
         //Begins the connection process, but creates a new thread which deals with finishing it.
         Console.WriteLine("Starting task to listen for new tcp Clients");
         ListenForTcpClientsTask();
-       // ReceiveUdpDataTask();
+        ReceiveUdpDataTask();
         Console.Read();
     }
 
@@ -81,42 +81,16 @@ public class Server{
         throw new NotImplementedException();
         return null;
     }
+    
 
     static async Task ReceiveUdpDataTask(){
-        throw new InvalidOleVariantTypeException();
+        Console.WriteLine("Starting ReceiveUdpDataTask");
         while (true){
-            Console.WriteLine("Awaiting Udp Package...");
+            //Console.WriteLine("Awaiting Udp Package...");
             var udpReceiveResult = await udpHost.ReceiveAsync();
-            Console.WriteLine("Udp Package received.");
-            new Task(() => { HandleReceivedUdpDataTask(udpReceiveResult); }).Start();
+            //Console.WriteLine("Udp Package received.");
+            new Task(() => { MessageHandler.HandleReceivedUdpDataTask(udpReceiveResult); }).Start();
         }
     }
-
-    static void HandleReceivedUdpDataTask(UdpReceiveResult udpReceiveResult){
-        throw new InvalidOleVariantTypeException();
-        var udpMessage = JsonSerializer.Deserialize<Message>(udpReceiveResult.Buffer);
-
-        if (udpMessage == default){
-            Console.WriteLine("Received Udp Message: Invalid, discarding.");
-            return;
-        }
-
-        string messageType = "";
-        if (udpMessage.messageName == "PositionMessage"){
-            var result = JsonSerializer.Deserialize<PositionMessage>(udpReceiveResult.Buffer);
-            foreach (var clientSlot in connectedClientDictionary){
-                if (result.id == clientSlot.Key){
-                    clientSlot.Value.playerInfo.positionX = result.positionX;
-                    clientSlot.Value.playerInfo.positionY = result.positionY;
-                }
-            }
-
-            messageType = udpMessage.messageName;
-        }
-        else{
-            Console.WriteLine("Not assigned Udp Message Type");
-        }
-
-        Console.WriteLine($"Udp packaged: {messageType}");
-    }
+   
 }

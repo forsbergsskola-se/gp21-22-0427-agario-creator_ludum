@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 using AgarioShared;
 using Newtonsoft.Json;
@@ -8,6 +9,7 @@ using UnityEngine;
 namespace Network{
     public class MessageHandler : MonoBehaviour{
         public UnityEventSO playerReadyEventSo;
+        public GlobalPlayerManager globalPlayerManager;
         [SerializeField] ExecuteOnMainThread executeOnMainThread;
         [SerializeField] IntUnityEventSo maxPlayersAllowedEventSo;
         [SerializeField] PlayerInfoUnityEventSo playerInfoReceivedFromServerEventSo;
@@ -37,11 +39,6 @@ namespace Network{
                     await SendMessageTask(message);
                     break;
                 }
-                
-                case "PositionMessage":{
-                    throw new NotImplementedException();
-                    break;
-                }
                 default:{
                     throw new NotImplementedException();
                 }
@@ -58,7 +55,33 @@ namespace Network{
 
         #endregion
 
-        
+
+        #region UDPSendMessagesRegion
+
+        public async Task PrepareThenSendUdpMessages(string messageName){
+            switch (messageName){
+                case "PositionMessage":{
+                    var message = new PositionMessage{
+                        id = playerInfo.id,
+                        positionX = playerInfo.positionX,
+                        positionY = playerInfo.positionY
+                    };
+                    await SendUDPMessageTask(message);
+                    break;
+                }
+            }
+        }
+
+        async Task SendUDPMessageTask<T>(T message) where T : Message{
+            Debug.Log($"Sending UDP Message of Type: {typeof(T)}...");
+            var convertedMessage = JsonUtility.ToJson(message);
+
+            await personalClient.udpClient.SendAsync(Encoding.ASCII.GetBytes(convertedMessage),
+                convertedMessage.Length,personalClient.serverEndPoint);
+            Debug.Log($"Sent UDP Message of Type: {typeof(T)}.");
+        }
+
+        #endregion
         
         
         
@@ -160,8 +183,15 @@ namespace Network{
                 }
                 case "PositionMessage":{
                     var message = JsonUtility.FromJson<PositionMessage>(_jsonString);
-                    playerInfo.positionX = message.positionX;
-                    playerInfo.positionY = message.positionY;
+                   
+                    executeOnMainThread.Execute(SetPlayerPosition);
+
+                    void SetPlayerPosition(){
+                        globalPlayerManager.activePlayerDictionary[message.id].playerInfo.positionX = message.positionX;
+                        globalPlayerManager.activePlayerDictionary[message.id].playerInfo.positionY = message.positionY;
+                        globalPlayerManager.activePlayerDictionary[message.id].transform.position = new Vector2(message.positionX,message.positionY);
+                    }
+                    
                     break;
                 }
                 default:{

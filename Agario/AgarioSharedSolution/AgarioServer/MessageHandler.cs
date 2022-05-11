@@ -1,3 +1,5 @@
+using System.Net.Sockets;
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Text.Json.Serialization;
@@ -101,6 +103,16 @@ internal class MessageHandler{
                 
                 break;
             }
+            case "PositionMessage":{
+                foreach (var connectedClient in Server.connectedClientDictionary){
+                    if (connectedClient.Value.id == (content as PositionMessage).id){
+                        continue;
+                    }
+
+                    await SendMessageTask(content, connectedClient.Value);
+                } 
+                break;
+            }
         }
     }
 
@@ -192,6 +204,43 @@ internal class MessageHandler{
             
             
         }
+    }
+
+    #endregion
+
+    #region UDPReceiveMessageRegion
+
+    internal static void HandleReceivedUdpDataTask(UdpReceiveResult udpReceiveResult){
+        //Console.WriteLine("Udp Result: "+ udpReceiveResult.Buffer);
+        var receivedMessageAsString = Encoding.ASCII.GetString(udpReceiveResult.Buffer);
+        //Console.WriteLine("UDPreceivedMessageAsString: "+ receivedMessageAsString);
+        var jsonString = JsonSerializer.Serialize(receivedMessageAsString);
+       // Console.WriteLine("udpMessageAsJson: "+ jsonString);
+        var udpMessage = JsonSerializer.Deserialize<Message>(jsonString);
+
+        if (udpMessage == default){
+            Console.WriteLine("Received Udp Message: Invalid, discarding.");
+            return;
+        }
+        
+        switch (udpMessage.messageName){
+            case "PositionMessage":{
+                var result = JsonSerializer.Deserialize<PositionMessage>(udpReceiveResult.Buffer);
+
+                //Console.WriteLine($"Assigning position values for Player({result.id})");
+                Server.connectedClientDictionary[result.id].playerInfo.positionX = result.positionX;
+                Server.connectedClientDictionary[result.id].playerInfo.positionX = result.positionY;
+                
+                PrepareThenSendMessageToAllConnectedClients("PositionMessage", result);
+                break;
+            }
+                default: {
+                Console.WriteLine("Not assigned Udp Message Type");
+                throw new NotImplementedException();
+                break;
+            }
+        }
+        
     }
 
     #endregion
