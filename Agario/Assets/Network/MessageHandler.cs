@@ -62,6 +62,7 @@ namespace Network{
             switch (messageName){
                 case "PositionMessage":{
                     var message = new PositionMessage{
+                        messageName = "PositionMessage",
                         id = playerInfo.id,
                         positionX = playerInfo.positionX,
                         positionY = playerInfo.positionY

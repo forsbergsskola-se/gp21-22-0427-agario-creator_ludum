@@ -81,7 +81,7 @@ public class Server{
         throw new NotImplementedException();
         return null;
     }
-    
+
 
     static async Task ReceiveUdpDataTask(){
         Console.WriteLine("Starting ReceiveUdpDataTask");
@@ -89,7 +89,14 @@ public class Server{
             //Console.WriteLine("Awaiting Udp Package...");
             var udpReceiveResult = await udpHost.ReceiveAsync();
             //Console.WriteLine("Udp Package received.");
-            new Task(() => { MessageHandler.HandleReceivedUdpDataTask(udpReceiveResult); }).Start();
+            
+            
+            //Console.WriteLine("Udp Result: "+ udpReceiveResult.Buffer);
+            var receivedMessageAsString = Encoding.ASCII.GetString(udpReceiveResult.Buffer);
+            //Console.WriteLine("UDPreceivedMessageAsString: "+ receivedMessageAsString);
+            //var jsonString = JsonSerializer.Serialize(receivedMessageAsString);
+            // Console.WriteLine("udpMessageAsJson: "+ jsonString);
+            new Task(() => { MessageHandler.HandleReceivedUdpDataTask(receivedMessageAsString); }).Start();
         }
     }
    

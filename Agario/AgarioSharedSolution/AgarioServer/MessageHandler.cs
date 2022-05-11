@@ -91,6 +91,7 @@ internal class MessageHandler{
         switch (messageName){
             case "NewPlayerJoinedInfoMessage":{
                 var message = new NewPlayerJoinedInfoMessage{
+                    messageName = "NewPlayerJoinedInfoMessage",
                     playerInfo = content as PlayerInfo,
                 };
                 Console.WriteLine($"New Player Joined Message to send: {message.playerInfo.name} ({message.playerInfo.id})");
@@ -210,27 +211,27 @@ internal class MessageHandler{
 
     #region UDPReceiveMessageRegion
 
-    internal static void HandleReceivedUdpDataTask(UdpReceiveResult udpReceiveResult){
-        //Console.WriteLine("Udp Result: "+ udpReceiveResult.Buffer);
-        var receivedMessageAsString = Encoding.ASCII.GetString(udpReceiveResult.Buffer);
-        //Console.WriteLine("UDPreceivedMessageAsString: "+ receivedMessageAsString);
-        var jsonString = JsonSerializer.Serialize(receivedMessageAsString);
-       // Console.WriteLine("udpMessageAsJson: "+ jsonString);
-        var udpMessage = JsonSerializer.Deserialize<Message>(jsonString);
+    internal static void HandleReceivedUdpDataTask(string jsonUdpResult){
+        var jsonOptions = new JsonSerializerOptions(){
+            IncludeFields = true
+        };
+       
+        var udpMessage = JsonSerializer.Deserialize<Message>(jsonUdpResult,jsonOptions);
 
         if (udpMessage == default){
             Console.WriteLine("Received Udp Message: Invalid, discarding.");
             return;
         }
-        
+
+        Console.WriteLine($"Udp Message is of type : {udpMessage.messageName}");
         switch (udpMessage.messageName){
             case "PositionMessage":{
-                var result = JsonSerializer.Deserialize<PositionMessage>(udpReceiveResult.Buffer);
+                
+                var result = JsonSerializer.Deserialize<PositionMessage>(jsonUdpResult,jsonOptions);
 
-                //Console.WriteLine($"Assigning position values for Player({result.id})");
+                Console.WriteLine($"Assigning position values for Player({result.id})");
                 Server.connectedClientDictionary[result.id].playerInfo.positionX = result.positionX;
                 Server.connectedClientDictionary[result.id].playerInfo.positionX = result.positionY;
-                
                 PrepareThenSendMessageToAllConnectedClients("PositionMessage", result);
                 break;
             }

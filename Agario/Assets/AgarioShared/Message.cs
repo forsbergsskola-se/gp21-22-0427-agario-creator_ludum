@@ -6,17 +6,14 @@ namespace Network{
     public class Message{
         public string messageName;
 
-        public Message(){
-            messageName = GetType().Name;
-        }
+        // public Message(){
+        //     messageName = GetType().Name;
+        // }
     }
+    
 
-    public class Message<T> : Message{
-        
-    }
-
-    public class PositionMessage : Message{
-        public int id;
+   [Serializable] public class PositionMessage : Message{
+       public int id;
         public float positionX;
         public float positionY;
     }

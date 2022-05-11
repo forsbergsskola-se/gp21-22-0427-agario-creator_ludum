@@ -230,17 +230,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27bdad7faad94fd29cb1776e1180b9df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &75329698 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 9125246982590286810, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
-  m_PrefabInstance: {fileID: 1482127830}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 75329696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fbca188af6be0d47ad023e19b6a110e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &75329703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -749,18 +738,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 974937560}
-        m_TargetAssemblyTypeName: Network.PersonalClient, Assembly-CSharp
-        m_MethodName: Connect
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75329698}
         m_TargetAssemblyTypeName: Network.PersonalClient, Assembly-CSharp
         m_MethodName: Connect
         m_Mode: 1
@@ -2589,7 +2566,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9167968066163128991, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2783421054161814216, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
@@ -3197,6 +3174,10 @@ PrefabInstance:
       propertyPath: executeOnMainThread
       value: 
       objectReference: {fileID: 2071457891}
+    - target: {fileID: 6570157077206320689, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+      propertyPath: globalPlayerManager
+      value: 
+      objectReference: {fileID: 2071457892}
     - target: {fileID: 6570157077206320689, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
       propertyPath: newPlayerJoinedEventSo
       value: 
