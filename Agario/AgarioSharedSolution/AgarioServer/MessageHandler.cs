@@ -28,7 +28,7 @@ internal class MessageHandler{
                     positionX = random.NextSingle() * (WorldManager._mapSizeX / 2f), //0-1 * 300 can be 0.34*300 == 102
                     positionY = random.NextSingle() * (WorldManager._mapSizeY / 2f),
                     score = 0,
-                    size = 3f,
+                    size = 5f,
                     movementSpeed = 20f,
                     mapSizeX = WorldManager._mapSizeX,
                     mapSizeY = WorldManager._mapSizeY
