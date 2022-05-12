@@ -805,6 +805,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scoreUGUIEventSO: {fileID: 11400000, guid: 5612272bb819b4e48b29a52ad25e8d0a, type: 2}
+  intSo: {fileID: 11400000, guid: 40856eb725cfcc141b6861e917ed54e3, type: 2}
 --- !u!1 &1829732246
 GameObject:
   m_ObjectHideFlags: 0
@@ -852,7 +853,7 @@ MonoBehaviour:
     ModeOverride: 0
     LensShift: {x: 0, y: 0}
     GateFit: 2
-    m_SensorSize: {x: 2.0767612, y: 1}
+    m_SensorSize: {x: 1.7356663, y: 1}
   m_Transitions:
     m_BlendHint: 0
     m_InheritPosition: 0

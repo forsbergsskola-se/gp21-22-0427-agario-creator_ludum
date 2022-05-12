@@ -11,6 +11,7 @@ using UnityEngine;
 public class Player : MonoBehaviour{
     [SerializeField]  IntUnityEventSo scoreUGUIEventSO;
     [SerializeField] bool isMainPlayer;
+    [SerializeField] IntSo intSo;
     
     public UnityEventSO playerReadyEventSo;
     public PlayerInfo playerInfo;
@@ -70,6 +71,7 @@ public class Player : MonoBehaviour{
         }
         Debug.Log($"Setting Everything ({playerInfo.id})");
         scoreUGUIEventSO.intUnityEventSo.Invoke(playerInfo.score);
+        intSo.intSO = playerInfo.score;
     }
     
 

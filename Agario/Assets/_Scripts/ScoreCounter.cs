@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class ScoreCounter : MonoBehaviour{
     [SerializeField] IntUnityEventSo scoreUGUIEventSO;
+    [SerializeField] IntSo intSo;
     TextMeshProUGUI textMeshProUGUI;
 
     void Awake(){
@@ -14,9 +15,10 @@ public class ScoreCounter : MonoBehaviour{
 
     void Start(){
         scoreUGUIEventSO.intUnityEventSo.AddListener(SetScoreCounter);
+        SetScoreCounter(intSo.intSO);
     }
 
     void SetScoreCounter(int score){
-        textMeshProUGUI.text = score.ToString();
+        textMeshProUGUI.text = $"Score: {score} ";
     }
 }
