@@ -22,7 +22,7 @@ public class Player : MonoBehaviour{
     void Awake(){
         spriteRenderer = GetComponent<SpriteRenderer>();
         namePlate = GetComponentInChildren<TextMeshPro>();
-        executeOnMainThread = FindObjectOfType<ExecuteOnMainThread>();
+        executeOnMainThread = GameObject.FindWithTag("GameController").GetComponent<ExecuteOnMainThread>();
     }
 
     void Start(){

@@ -20,20 +20,18 @@ internal class MessageHandler{
         switch (messageName){
             case "InitialServerToClientMessage":{
                 Random random = new Random();
-                var _mapSizeX = 300;
-                var _mapSizeY = 300;
-                
+
                 var message = new InitialServerToClientMessage{
                     messageName = "InitialServerToClientMessage",
                     id = clientSlot.id,
-                    maxPlayers = Server.maxClients,
-                    positionX = random.NextSingle() * (_mapSizeX / 2f), //0-1 * 300 can be 0.34*300 == 102
-                    positionY = random.NextSingle() * (_mapSizeY / 2f),
+                    maxPlayers = WorldManager.maxPlayers,
+                    positionX = random.NextSingle() * (WorldManager._mapSizeX / 2f), //0-1 * 300 can be 0.34*300 == 102
+                    positionY = random.NextSingle() * (WorldManager._mapSizeY / 2f),
                     score = 0,
                     size = 3f,
                     movementSpeed = 20f,
-                    mapSizeX = _mapSizeX,
-                    mapSizeY = _mapSizeY
+                    mapSizeX = WorldManager._mapSizeX,
+                    mapSizeY = WorldManager._mapSizeY
                 };
                 Console.WriteLine($"Clientslot Id ({clientSlot.id})");
                 await SendMessageTask(message,clientSlot);
@@ -42,7 +40,7 @@ internal class MessageHandler{
             case "AllPlayerInfoMessage":{
                 var message = new AllPlayerInfoMessage{
                     messageName = "AllPlayerInfoMessage",
-                    allPlayersInfoArray = Server.connectedPlayerArray
+                    allPlayersInfoArray = WorldManager.connectedPlayerArray
                 };
                 
                 Console.WriteLine($"All Player Array: {message.allPlayersInfoArray}");
@@ -68,16 +66,16 @@ internal class MessageHandler{
                 await SendMessageTask(message, clientSlot);
                 break;
             }
-            // case "NewPlayerJoinedInfoMessage":{
-            //     var message = new NewPlayerJoinedInfoMessage{
-            //        // messageName = blabla
-            //         playerInfo = clientSlot.playerInfo,
-            //     };
-            //     Console.WriteLine($"New Player Joined Message to send: {message.playerInfo.name} ({message.playerInfo.id})");
-            //     await SendMessageTask(message, clientSlot);
-            //     break;
-            // }
-                
+            case "AllOrbsInfoMessage":{
+                var message = new AllOrbsInfoMessage{
+                    messageName = "AllOrbsInfoMessage",
+                    allOrbsArray = WorldManager.activeOrbsArray
+                };
+                Console.WriteLine($"Sending Orb array {message.allOrbsArray.Length}");
+                await SendMessageTask(message, clientSlot);
+                break;
+            }
+
             default:{
                 throw new NotImplementedException();
             }
@@ -104,7 +102,7 @@ internal class MessageHandler{
                 
                 break;
             }
-            case "PositionMessage":{
+            case "PositionMessage":{ //TODO: Convert To udp data
                 foreach (var connectedClient in Server.connectedClientDictionary){
                     if (connectedClient.Value.id == (content as PositionMessage).id){
                         continue;
@@ -155,7 +153,7 @@ internal class MessageHandler{
             
                 //Disconnecting Client
                
-                Server.connectedPlayerArray[id] = new PlayerInfo();
+                WorldManager.connectedPlayerArray[id] = new PlayerInfo();
 
                 foreach (var slot in Server.connectedClientDictionary){
                     if (slot.Value.id == default || slot.Value.id == clientSlot.id){
@@ -193,11 +191,11 @@ internal class MessageHandler{
                 
                 Console.WriteLine("Name: "+clientSlot.playerInfo.name + " Id: " + clientSlot.playerInfo.id + " Score: " +clientSlot.playerInfo.score + " Size: " +clientSlot.playerInfo.size +
                               ("ColorR: " +clientSlot.playerInfo.colorR + " ColorG: " + clientSlot.playerInfo.colorG + " ColorB: "+clientSlot.playerInfo.colorB) + " PositionX: " +clientSlot.playerInfo.positionX + " PositionY: " +clientSlot.playerInfo.positionY);
-                Server.connectedPlayerArray[clientSlot.playerInfo.id] = clientSlot.playerInfo;
-                Console.WriteLine($"Adding PlayerInfo from Client ({id}): {Server.connectedPlayerArray[clientSlot.playerInfo.id].name}");
+                WorldManager.connectedPlayerArray[clientSlot.playerInfo.id] = clientSlot.playerInfo;
+                Console.WriteLine($"Adding PlayerInfo from Client ({id}): {WorldManager.connectedPlayerArray[clientSlot.playerInfo.id].name}");
                 
                 PrepareThenSendMessage("AllPlayerInfoMessage",clientSlot);
-                
+                PrepareThenSendMessage("AllOrbsInfoMessage", clientSlot);
                 
                 PrepareThenSendMessageToAllConnectedClients("NewPlayerJoinedInfoMessage", message.playerInfo);
                 break;
@@ -223,7 +221,7 @@ internal class MessageHandler{
             return;
         }
 
-        Console.WriteLine($"Udp Message is of type : {udpMessage.messageName}");
+        //Console.WriteLine($"Udp Message is of type : {udpMessage.messageName}");
         switch (udpMessage.messageName){
             case "PositionMessage":{
                 

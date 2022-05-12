@@ -15,46 +15,42 @@ public class Server{
     static TcpListener hostListener;
     static UdpClient udpHost;
     public static int maxClients = 10;
+    
    public static Dictionary<int, ClientSlot> connectedClientDictionary;
-   //public static PlayerInfo[] connectedPlayerArray;
-   public static PlayerInfo[] connectedPlayerArray = new PlayerInfo[maxClients];
 
-    public static Action<int> clearDataEvent;
-    
-    
-    public static void Main(){
+   public static async Task Main(){
         ServerSetUp();
 
         //Begins the connection process, but creates a new thread which deals with finishing it.
-        Console.WriteLine("Starting task to listen for new tcp Clients");
         ListenForTcpClientsTask();
         ReceiveUdpDataTask();
         Console.Read();
     }
 
-    static void ServerSetUp(){
+    static async Task ServerSetUp(){
+        Console.WriteLine("Starts Server Set Up");
         hostListener = new TcpListener(hostEndpoint);
         udpHost = new UdpClient(hostEndpoint);
-        
         connectedClientDictionary = new Dictionary<int, ClientSlot>(maxClients);
-        connectedPlayerArray = new PlayerInfo[maxClients];
-        CreateEmptyClientSlots();
 
+        var worldSetUpTask = WorldManager.SetUp(); // Refactor somehow to remove need of other script. Event, delegate?
+        CreateEmptyClientSlots();
+        await worldSetUpTask;
+        
         Console.WriteLine($"Starting server...");
         hostListener.Start();
-        //udpHost.Receive();
         Console.WriteLine($"Server Started (Port: {port})");
+        Console.WriteLine("Finished Server Set Up");
     }
 
     static void CreateEmptyClientSlots(){
-        //connectedPlayerArray[0] = new PlayerInfo();
         for (int i = 1; i < maxClients; i++){
             connectedClientDictionary.Add(i, new ClientSlot(0, null));
-            connectedPlayerArray[i] = new PlayerInfo();
         }
     }
 
     static async Task ListenForTcpClientsTask(){
+        Console.WriteLine("Starting task to listen for new tcp Clients");
         while (true){ 
             Console.WriteLine("Waiting for connection...");
             var tcpClient = await hostListener.AcceptTcpClientAsync();
@@ -89,7 +85,6 @@ public class Server{
             //Console.WriteLine("Awaiting Udp Package...");
             var udpReceiveResult = await udpHost.ReceiveAsync();
             //Console.WriteLine("Udp Package received.");
-            
             
             //Console.WriteLine("Udp Result: "+ udpReceiveResult.Buffer);
             var receivedMessageAsString = Encoding.ASCII.GetString(udpReceiveResult.Buffer);

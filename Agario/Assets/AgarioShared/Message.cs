@@ -39,12 +39,11 @@ namespace Network{
     
     //Orbs 
     
-    public class OrbInfoMessage : Message{
+    [Serializable] public class OrbInfoMessage : Message{
         public OrbInfo orb;
     }
-
-    
-    public class AllOrbsInfoMessage : Message{
+   
+    [Serializable] public class AllOrbsInfoMessage : Message{
         public OrbInfo[] allOrbsArray;
     }
     

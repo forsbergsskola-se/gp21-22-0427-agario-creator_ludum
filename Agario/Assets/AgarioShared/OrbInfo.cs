@@ -1,6 +1,8 @@
+using System;
+
 namespace AgarioShared
 {
-    public class OrbInfo{
+    [Serializable] public class OrbInfo{
         public int id;
         public int score;
         

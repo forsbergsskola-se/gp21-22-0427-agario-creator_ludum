@@ -19,8 +19,6 @@ public class GlobalPlayerManager : MonoBehaviour{
     [SerializeField] IntUnityEventSo maxPlayersAllowedEventSo;
     public Dictionary<int, Player> activePlayerDictionary;
 
-   // public PlayerInfo[] allActivePlayersArray;
-
     void Awake(){
         DontDestroyOnLoad(this);
     }

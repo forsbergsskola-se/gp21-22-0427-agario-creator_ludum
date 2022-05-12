@@ -2572,6 +2572,11 @@ PrefabInstance:
     m_RemovedComponents:
     - {fileID: 2783421054161814216, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+--- !u!1 &1494053328 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 249421048752857334, guid: 56014cc0aed224b4aa9bd6351d5830be, type: 3}
+  m_PrefabInstance: {fileID: 249421047666369555}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1501502999
 GameObject:
   m_ObjectHideFlags: 0
@@ -3180,9 +3185,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2071457892}
     - target: {fileID: 6570157077206320689, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+      propertyPath: maxOrbsAllowedEventSo
+      value: 
+      objectReference: {fileID: 11400000, guid: ac6bad76441904b47bffa628e91f9809, type: 2}
+    - target: {fileID: 6570157077206320689, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
       propertyPath: newPlayerJoinedEventSo
       value: 
       objectReference: {fileID: 11400000, guid: d2f0dba96ef2c8b498817c3697fd057e, type: 2}
+    - target: {fileID: 6570157077206320689, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
+      propertyPath: newOrbInfoFromServerEventSo
+      value: 
+      objectReference: {fileID: 11400000, guid: 80a70e5ef40f64f4c8a903b125b6b302, type: 2}
     - target: {fileID: 9167968066163128977, guid: 8bd5f935ab675994c866dc42ee437cc4, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -3717,7 +3730,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2071457891, guid: 56014cc0aed224b4aa9bd6351d5830be, type: 3}
   m_PrefabInstance: {fileID: 249421047666369555}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1494053328}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5276ec6061ed6a84b978d43d007d5c2c, type: 3}
@@ -3728,12 +3741,28 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2071457892, guid: 56014cc0aed224b4aa9bd6351d5830be, type: 3}
   m_PrefabInstance: {fileID: 249421047666369555}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1494053328}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3efcb81a4136cb243a94fe1daeacaaa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2071457895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1494053328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cb0ab8d3dd1df3346a13712f309db878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  orbPrefab: {fileID: 8157151855626109665, guid: 63cbe31716e0bfe46b6da82fb996fd9d, type: 3}
+  newOrbInfoFromServerEventSo: {fileID: 11400000, guid: 80a70e5ef40f64f4c8a903b125b6b302, type: 2}
+  maxOrbsAllowedEventSo: {fileID: 11400000, guid: ac6bad76441904b47bffa628e91f9809, type: 2}
+  activeOrbArray: []
 --- !u!1 &2087643403
 GameObject:
   m_ObjectHideFlags: 0
@@ -3872,6 +3901,10 @@ PrefabInstance:
     - target: {fileID: 249421048752857334, guid: 56014cc0aed224b4aa9bd6351d5830be, type: 3}
       propertyPath: m_Name
       value: Game Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 249421048752857334, guid: 56014cc0aed224b4aa9bd6351d5830be, type: 3}
+      propertyPath: m_TagString
+      value: GameController
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 56014cc0aed224b4aa9bd6351d5830be, type: 3}

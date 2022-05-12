@@ -13,8 +13,11 @@ namespace Network{
         [SerializeField] ExecuteOnMainThread executeOnMainThread;
         [SerializeField] IntUnityEventSo maxPlayersAllowedEventSo;
         [SerializeField] PlayerInfoUnityEventSo playerInfoReceivedFromServerEventSo;
+        [SerializeField] OrbInfoUnityEventSo newOrbInfoFromServerEventSo;
+        [SerializeField] IntUnityEventSo maxOrbsAllowedEventSo;
         [SerializeField] PlayerInfoUnityEventSo newPlayerJoinedEventSo;
         // [SerializeField] PlayerInfoUnityEventSo playerDisconnectedEventSo;
+        
         Player player;
         PersonalClient personalClient;
         PlayerInfo playerInfo;
@@ -159,24 +162,7 @@ namespace Network{
                         executeOnMainThread.Execute(
                             () => playerInfoReceivedFromServerEventSo.playerInfoUnityEventSo.Invoke(_playerInfo));
                     }
-                    
-                    // globalPlayerManager.allActivePlayersArray = new PlayerInfo[message.allPlayersInfoArray.Length];
-                    // globalPlayerManager.allActivePlayersArray = message.allPlayersInfoArray;
-                    //
-                    // foreach (var playerInfomercial in  globalPlayerManager.allActivePlayersArray){
-                    //     if (playerInfomercial.id == default){
-                    //         continue;
-                    //     }
-                    //     
-                    //     if (playerInfomercial.id == playerInfo.id){
-                    //         Debug.Log("Active Player (You): "+playerInfomercial.name + $"({playerInfomercial.id})");
-                    //         continue;
-                    //     }
-                    //     Debug.Log("Active Player: "+playerInfomercial.name + $"({playerInfomercial.id})");
-                    //     globalPlayerManager.cplayerInfomercial.CreatePlayer();
-                    //
-                    // }
-                    
+
                     Debug.Log("Invoking Player Ready Event On Main Thread");
                     executeOnMainThread.Execute(playerReadyEventSo.unityEventSo.Invoke); //Tells everyone who needs to know that the player is ready
                     
@@ -194,6 +180,24 @@ namespace Network{
                     }
                     
                     break;
+                }
+                case "AllOrbsInfoMessage":{
+                    var message = JsonUtility.FromJson<AllOrbsInfoMessage>(_jsonString);
+                    if (message == null){
+                        throw new ArgumentNullException();
+                    }
+                    Debug.Log($"Max allowed orbs: {message.allOrbsArray.Length}");
+                    executeOnMainThread.Execute(()=> maxOrbsAllowedEventSo.intUnityEventSo.Invoke(message.allOrbsArray.Length));
+                    foreach (var orbInfo in message.allOrbsArray){
+                        if (orbInfo.id == default){
+                            continue;
+                        }
+                        Debug.Log($"Invoking orbInfoEvent for orb ({orbInfo.id})");
+                        executeOnMainThread.Execute(
+                            () => newOrbInfoFromServerEventSo.eventSo.Invoke(orbInfo));
+                    }
+                    break;
+                    
                 }
                 default:{
                     throw new NotImplementedException();
