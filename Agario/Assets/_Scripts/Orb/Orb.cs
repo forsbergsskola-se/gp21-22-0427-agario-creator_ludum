@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Orb : MonoBehaviour{
    public OrbInfo orbInfo;
-   
+   [SerializeField] OrbInfoUnityEventSo orbDeathSo;
   [SerializeField] SpriteRenderer spriteRenderer;
    ExecuteOnMainThread executeOnMainThread;
 
@@ -49,6 +49,8 @@ public class Orb : MonoBehaviour{
    
        #endregion
 
-    
 
+       public void Die(){
+           orbDeathSo.eventSo.Invoke(orbInfo);
+       }
 }

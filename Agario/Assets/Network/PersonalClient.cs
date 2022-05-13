@@ -19,6 +19,7 @@ namespace Network{
 
         [SerializeField] public Vector2SO mapSizeSo;
         [SerializeField]  Player player;
+        [SerializeField] PlayerInfoUnityEventSo mainPlayerDeathEventSo;
         
         PlayerInfo playerInfo;
         MessageHandler messageHandler;
@@ -58,6 +59,7 @@ namespace Network{
             maxNameLenght = 15;
             tcpClient = new TcpClient();
             udpClient = new UdpClient();
+            mainPlayerDeathEventSo.playerInfoUnityEventSo.AddListener((_playerInfo)=>Disconnect());
         }
 
         public void Connect(){
@@ -83,6 +85,10 @@ namespace Network{
             streamWriter = new StreamWriter(stream);
             streamWriter.AutoFlush = true;
             IsConnected = true; // Calls SendConnectToServerData
+        }
+
+        public void Disconnect(){
+            tcpClient.Client.Disconnect(true);
         }
         
 

@@ -11,9 +11,10 @@ GameObject:
   - component: {fileID: 8157151855626109668}
   - component: {fileID: 8157151855626109671}
   - component: {fileID: 8157151855626109670}
+  - component: {fileID: 1597955544015287499}
   m_Layer: 0
   m_Name: Orb
-  m_TagString: Untagged
+  m_TagString: Orb
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,6 +105,24 @@ MonoBehaviour:
     colorG: 0
     colorB: 0
     size: 0
+    scoreDefenseModifier: 0
     positionX: 0
     positionY: 0
+  orbDeathSo: {fileID: 11400000, guid: ee48d787ed65c604bb53c794e096912c, type: 2}
   spriteRenderer: {fileID: 8157151855626109671}
+--- !u!58 &1597955544015287499
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8157151855626109665}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 1

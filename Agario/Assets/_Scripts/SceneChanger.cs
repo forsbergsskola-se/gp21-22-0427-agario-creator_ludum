@@ -13,6 +13,7 @@ public class SceneChanger : MonoBehaviour{
     [SerializeField] SceneAsset menuScene;
     [SerializeField] SceneAsset loadingScene;
     [SerializeField] SceneAsset gameScene;
+    [SerializeField] SceneAsset endScene;
 
     void Awake(){
         DontDestroyOnLoad(gameObject);
@@ -37,9 +38,16 @@ public class SceneChanger : MonoBehaviour{
         gameSceneIsActiveBoolSo.boolSo = true;
         Debug.Log("Finished loading gameScene. ");
     }
-
+    public void LoadEndScene(){
+        Debug.Log("Loading EndScene... ");
+        SceneManager.LoadScene(endScene.name,LoadSceneMode.Single);
+        gameSceneIsActiveBoolSo.boolSo = true;
+        Debug.Log("Finished loading EndScene. ");
+    }
 
     void OnApplicationQuit(){
         gameSceneIsActiveBoolSo.boolSo = false;
     }
+
+    
 }

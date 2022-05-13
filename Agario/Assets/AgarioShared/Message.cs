@@ -5,10 +5,6 @@ using AgarioShared;
 namespace Network{
     public class Message{
         public string messageName;
-
-        // public Message(){
-        //     messageName = GetType().Name;
-        // }
     }
     
 
@@ -22,6 +18,7 @@ namespace Network{
         public int score;
         public int maxPlayers;
         public float size;
+        public float scoreDefenseModifier;
         public float movementSpeed;
         public float mapSizeX;
         public float mapSizeY;

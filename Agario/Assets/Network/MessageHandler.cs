@@ -119,6 +119,7 @@ namespace Network{
                     var message = JsonUtility.FromJson<InitialServerToClientMessage>(_jsonString);
                     playerInfo.id = message.id;
                     playerInfo.score = message.score;
+                    playerInfo.scoreDefenseModifier = message.scoreDefenseModifier;
                     playerInfo.size = message.size;
                     playerInfo.movementSpeed = message.movementSpeed;
                     playerInfo.positionX = message.positionX;

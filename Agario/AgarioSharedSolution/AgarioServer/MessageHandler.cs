@@ -27,9 +27,10 @@ internal class MessageHandler{
                     maxPlayers = WorldManager.maxPlayers,
                     positionX = random.NextSingle() * (WorldManager._mapSizeX / 2f), //0-1 * 300 can be 0.34*300 == 102
                     positionY = random.NextSingle() * (WorldManager._mapSizeY / 2f),
-                    score = 0,
-                    size = 5f,
-                    movementSpeed = 20f,
+                    score = WorldManager.playerScoreStart,
+                    scoreDefenseModifier = WorldManager.scoreDefenseModifier,
+                    size = WorldManager.playerSizeStart,
+                    movementSpeed = WorldManager.playerMovementSpeed,
                     mapSizeX = WorldManager._mapSizeX,
                     mapSizeY = WorldManager._mapSizeY
                 };

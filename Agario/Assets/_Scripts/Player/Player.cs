@@ -10,6 +10,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour{
     [SerializeField]  IntUnityEventSo scoreUGUIEventSO;
+    [SerializeField] PlayerInfoUnityEventSo mimicPlayerDeathSo;
+    [SerializeField] PlayerInfoUnityEventSo mainPlayerDeathSo;
     [SerializeField] bool isMainPlayer;
     [SerializeField] IntSo intSo;
     
@@ -81,4 +83,12 @@ public class Player : MonoBehaviour{
     }
 
     #endregion
+
+    public void Die(){
+        if (isMainPlayer){
+            mainPlayerDeathSo.playerInfoUnityEventSo.Invoke(playerInfo);
+            return;
+        }
+        mimicPlayerDeathSo.playerInfoUnityEventSo.Invoke(playerInfo);
+    }
 }

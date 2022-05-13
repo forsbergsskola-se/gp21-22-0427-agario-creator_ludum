@@ -14,6 +14,15 @@ public class WorldManager{
     public static float _mapSizeX = 300;
     public static float _mapSizeY = 300;
     public static float minOrbSize = 1;
+    
+    
+    //Player Start Values
+    public static int playerScoreStart = 5;
+    
+    public static float scoreDefenseModifier = 1.1f;
+    public static float playerSizeStart = 5f;
+    public static float playerMovementSpeed = 20f;
+    
 
     public static async Task SetUp(){
         Console.WriteLine("Starts World Set Up");
@@ -47,7 +56,8 @@ public class WorldManager{
         activeOrbsArray[i] = new OrbInfo();
         activeOrbsArray[i].id = i;
         activeOrbsArray[i].score = random.Next(1, 11);
-        activeOrbsArray[i].size = minOrbSize + (activeOrbsArray[i].score * scoreToSizeMultiplier); 
+        activeOrbsArray[i].size = minOrbSize + (activeOrbsArray[i].score * scoreToSizeMultiplier);
+        activeOrbsArray[i].scoreDefenseModifier = scoreDefenseModifier;
         activeOrbsArray[i].colorR = random.Next(0, 256); //255 is color max
         activeOrbsArray[i].colorG = random.Next(0, 256);
         activeOrbsArray[i].colorB = random.Next(0, 256);

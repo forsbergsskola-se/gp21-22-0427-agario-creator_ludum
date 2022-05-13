@@ -14,6 +14,7 @@ namespace AgarioShared
         public int colorB;
 
         public float size;
+        public float scoreDefenseModifier;
         public float positionX;
         public float positionY;
         public float movementSpeed; 

@@ -13,8 +13,11 @@ public class GlobalPlayerManager : MonoBehaviour{
     [SerializeField] PlayerInfoUnityEventSo newPlayerJoinedEventSo;
     //[SerializeField] PlayerInfoUnityEventSo playerDisconnectedEventSo;
     [SerializeField] GameObject playerPrefab;
-    //[SerializeField] GameObject map;
+    [SerializeField] PlayerInfoUnityEventSo mimicPlayerDeathSo;
+    [SerializeField] PlayerInfoUnityEventSo mainPlayerDeathSo;
     [SerializeField] ExecuteOnMainThread executeOnMainThread;
+    [SerializeField] SceneChanger sceneChanger;
+    
 
     [SerializeField] IntUnityEventSo maxPlayersAllowedEventSo;
     public Dictionary<int, Player> activePlayerDictionary;
@@ -28,6 +31,23 @@ public class GlobalPlayerManager : MonoBehaviour{
         executeOnMainThread.Execute(() => playerInfoReceivedFromServerEventSo.playerInfoUnityEventSo.AddListener(HandlePlayerInfo));
         executeOnMainThread.Execute(()=> newPlayerJoinedEventSo.playerInfoUnityEventSo.AddListener(HandlePlayerInfo));
         //executeOnMainThread.Execute(()=> playerDisconnectedEventSo.playerInfoUnityEventSo.AddListener(DestroyPlayer));
+        executeOnMainThread.Execute(()=> mimicPlayerDeathSo.playerInfoUnityEventSo.AddListener(DestroyPlayer));
+        executeOnMainThread.Execute(()=> mainPlayerDeathSo.playerInfoUnityEventSo.AddListener(HandleMainPlayerDeath));
+    }
+
+    void HandleMainPlayerDeath(PlayerInfo _playerInfo){
+        DestroyAllButMainPlayer(_playerInfo);
+        sceneChanger.LoadEndScene();
+    }
+
+    void DestroyAllButMainPlayer(PlayerInfo _playerInfo){
+        foreach (var playerInDictionary in activePlayerDictionary){
+            if (playerInDictionary.Value.playerInfo.id == _playerInfo.id){
+                continue;
+            }
+
+            DestroyPlayer(playerInDictionary.Value.playerInfo);
+        }
     }
 
     void HandlePlayerInfo(PlayerInfo _playerInfo){

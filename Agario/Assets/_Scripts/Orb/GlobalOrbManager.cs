@@ -8,6 +8,7 @@ using UnityEngine;
 public class GlobalOrbManager : MonoBehaviour{
     [SerializeField] GameObject orbPrefab;
     [SerializeField] OrbInfoUnityEventSo newOrbInfoFromServerEventSo;
+    [SerializeField] OrbInfoUnityEventSo orbDeathSo;
     [SerializeField] IntUnityEventSo maxOrbsAllowedEventSo;
     public Orb[] activeOrbArray;
 
@@ -19,6 +20,14 @@ public class GlobalOrbManager : MonoBehaviour{
     void Start(){
         maxOrbsAllowedEventSo.intUnityEventSo.AddListener(SetMaxOrbLimit);
         newOrbInfoFromServerEventSo.eventSo.AddListener(HandleNewOrbInfo);
+        orbDeathSo.eventSo.AddListener(DestroyOrb);
+    }
+
+    void DestroyOrb(OrbInfo _orbInfo){
+        Debug.Log($"Destroying: Orb ({_orbInfo.id})...");
+        Destroy(activeOrbArray[_orbInfo.id].gameObject);
+        Debug.Log($"Destroyed: Orb ({_orbInfo.id}).");
+        activeOrbArray[_orbInfo.id] = default;
     }
 
     void SetMaxOrbLimit(int amount){
