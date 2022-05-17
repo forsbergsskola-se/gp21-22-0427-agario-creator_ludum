@@ -61,7 +61,7 @@ public class WorldManager{
         activeOrbsArray[i].colorR = random.Next(0, 256); //255 is color max
         activeOrbsArray[i].colorG = random.Next(0, 256);
         activeOrbsArray[i].colorB = random.Next(0, 256);
-        activeOrbsArray[i].positionX = random.NextSingle() * (_mapSizeX / 2f); //0-1 * 300 can be 0.34*300 == 102
+        activeOrbsArray[i].positionX = random.NextSingle() * (_mapSizeX / 2f); //0-1 * 300 can be 0.34*300 == 102   /2 for half of map
         activeOrbsArray[i].positionY = random.NextSingle() * (_mapSizeY / 2f);
     }
 }

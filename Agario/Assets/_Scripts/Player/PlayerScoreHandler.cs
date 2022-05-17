@@ -20,10 +20,15 @@ public class PlayerScoreHandler : MonoBehaviour{
             var otherPlayer = col.GetComponent<Player>();
             var otherPlayerInfo = otherPlayer.playerInfo;
 
+            Debug.Log("Other Player Score: "+otherPlayerInfo.score);
+            Debug.Log("Other Player ScoreDefenseMultiplier: "+otherPlayerInfo.scoreDefenseModifier);
+            Debug.Log("This Player: "+ playerInfo.name);
             if (playerInfo.score > (otherPlayerInfo.score * otherPlayerInfo.scoreDefenseModifier)){
                 playerInfo.score += otherPlayerInfo.score;
+                otherPlayer.Die();
             }
             else if ((playerInfo.score * playerInfo.scoreDefenseModifier) < otherPlayerInfo.score){
+                Debug.Log($"Not enough score to kill {otherPlayerInfo.name}, dying.");
                 player.Die();
             }
         }
