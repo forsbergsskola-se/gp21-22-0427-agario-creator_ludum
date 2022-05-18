@@ -56,3 +56,82 @@ Assignments
 - Be wary of following Tutorials or downloading Sample Code. Chances are that it's extremely over-engineered and that I'll notice tha the code is not yours.
 - Especially exercises 1-4 do not require any complex code.
 - For Exercise 5, it's also best to start very small and slowly scale it up when required.
+
+# Assignment Task List
+
+### TCP & UDP Assignments:
+
+- [X] Time Server implemented
+- [X] Time Client implemented
+- [X] Open Word Server implemented
+- [X] Open word Client implemented
+
+*comments:*
+
+#
+
+### Agar.io Player Spawning:
+
+- [X] `Agario` scene added to project
+- [X] `FIELD_SIZE` sets the play area 
+- [X] `CLAMP_POSITION` of Player to within this Field
+- [X] `PLAYER_SPAWN` instantiates player 
+  - [X] \(Optional) to a `RANDOM_POSITION` 
+
+*comments:*
+
+#
+
+### Agar.io Player Tracking:
+
+- [X] `FOLLOW_CAMERA` tracks player
+- [X] `PLAYER_VISUAL` shows player in-game as a circle
+- [X] `PLAYER_INPUT` tracks where player wants to move to
+- [X] `MOUSE_POSITION` player moves towards mouse's `VECTOR_DIRECTION`
+  - [ ] or `WASD_INPUT` used instead
+
+*comments:*
+
+#
+
+### Agar.io Orb Collection:
+
+- [X] `SPAWN_ORBS` instantiates orbs within map's bounds
+  - [X] to a `RANDOM_POSITION`
+  - [ ] within an `UPDATE_LOOP`
+- [X] `COLLECT_ORB` player can eat these orbs
+  - [ ] to `UPDATE_VISUALS` & grow in size
+  - [ ] and `INCREASE_SCORE` by one
+
+*comments:*
+
+#
+
+### Agar.io Enemy/Player Collision:
+
+- [ ] `DISTANCE_CHECK` sees if players are overlapping & can be eaten
+- [ ] `PLAYER_RESPAWN` instantiates smaller player at random pos with 0 score
+- [ ] `INCREASE_SCORE` of the bigger player with the smaller one's total score
+- [ ] `PLAYER_LEADERBOARD` tracks & ranks high scores of players
+- [X] `PLAYER_NAMES` shows the names of each player on their circles + leaderboard entry 
+
+*comments:*
+
+#
+
+### Agar.io Networking:
+
+- [X] `CONNECT_GAME` for players to join server
+- [X] `DISCONNECT_GAME` disconnects players from server
+- [X] `CURRENTLY_CONNECTED_PLAYERS` tracks active players
+- [X] `OTHER_PLAYERS_BROADCAST` updates player positions & scores to others
+- [X] `CHEAT_PROTECTION` exists in some form
+- [ ] `INTERPOLATE` player positions to protect against transportation if lagging occurs
+
+*comments:*
+
+#
+
+### 100% Completion:
+
+- [ ] One final checkbox to rule them all
