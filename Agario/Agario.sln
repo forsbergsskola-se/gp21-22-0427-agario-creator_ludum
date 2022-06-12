@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{A7F30F20-C9BB-E3D9-B0B6-2877304B01AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgarioShared", "AgarioShared.csproj", "{F02EDDC9-819B-6811-CC0A-A5E1F2BEF94D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AgarioServer", "..\AgarioServer\AgarioServer.csproj", "{5FF3B3D3-CC2E-4584-B9B0-0A46E179F59B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{a7f30f20-c9bb-e3d9-b0b6-2877304b01ad}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{a7f30f20-c9bb-e3d9-b0b6-2877304b01ad}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{f02eddc9-819b-6811-cc0a-a5e1f2bef94d}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{f02eddc9-819b-6811-cc0a-a5e1f2bef94d}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FF3B3D3-CC2E-4584-B9B0-0A46E179F59B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FF3B3D3-CC2E-4584-B9B0-0A46E179F59B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
