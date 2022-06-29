@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: aa518df57689b154ea11f711e5386f83
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - scoreUGUIEventSO: {fileID: 11400000, guid: 5612272bb819b4e48b29a52ad25e8d0a, type: 2}
+  - playerReadyEventSo: {fileID: 11400000, guid: 9d53dbfa74ccfba48b1cc16f012c3e66, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
